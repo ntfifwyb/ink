@@ -147,6 +147,11 @@ class TodayTest(unittest.TestCase):
 
 
 class ConfigTest(unittest.TestCase):
+    def test_menu_bar_uses_config_colors(self):
+        qss = config.menu_bar_qss(dict(config.COLORS, bg="#000000", raised="#111111"))
+        self.assertIn("QMenuBar { background: #000000;", qss)
+        self.assertIn("background: #111111;", qss)
+
     def test_shipped_config_matches_defaults(self):
         raw = json.loads((SRC / "anki_dashboard" / "config.json").read_text())
         self.assertEqual(raw["colors"], config.COLORS)

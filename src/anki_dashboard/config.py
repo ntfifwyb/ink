@@ -67,3 +67,14 @@ def css_variables(colors: dict[str, str]) -> str:
     """A :root rule defining each color as --ad-<name>."""
     body = "".join(f"--ad-{k}:{v};" for k, v in colors.items())
     return f":root{{{body}}}"
+
+
+def menu_bar_qss(colors: dict[str, str]) -> str:
+    """Qt stylesheet for the main window's menu bar."""
+    c = colors
+    return (
+        f"QMenuBar {{ background: {c['bg']}; color: {c['fg2']}; border: none; }}"
+        f"QMenuBar::item {{ background: transparent; padding: 4px 8px; }}"
+        "QMenuBar::item:selected, QMenuBar::item:pressed"
+        f" {{ background: {c['raised']}; color: {c['fg1']}; }}"
+    )

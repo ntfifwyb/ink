@@ -4,6 +4,9 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Added
+- The top toolbar, menu bar and the deck list's bottom bar now use the add-on's background, so the black no longer stops at Anki's gray bars.
+
 ## [0.2.0] - 2026-10-19
 
 ### Added
