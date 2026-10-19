@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anki Dashboard Mockup</title>
+<style>
+/* Layout: two stacked Anki "windows" (deck list, reviewer) inside a width-switchable frame; one font stack, 4px spacing scale. */
+:root {
+  color-scheme: dark;
+  --bg: #0d0d0e;
+  --surface: #151516;
+  --raised: #1c1c1e;
+  --line: #29292b;
+  --fg1: #ececec;   /* key text */
+  --fg2: #a3a3a6;   /* secondary */
+  --fg3: #6e6e72;   /* labels, dim */
+  --fg4: #46464a;   /* dashes, empty */
+  --accent: #f5f5f5;
+  --accent-2: #b0b0b3;
+  --accent-3: #727275;
+  --accent-4: #3b3b3e;
+  --cell-empty: #1e1e20;
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+  --r: 6px;
+}
+html, body { overflow-x: hidden; }
+body {
+  background: var(--bg); color: var(--fg1); font-family: var(--font); font-size: 14px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: var(--s5) var(--s6);
+  font-variant-numeric: tabular-nums;
+}
+.page { max-width: 1200px; margin: 0 auto; display: grid; gap: var(--s5); }
+header.intro { display: grid; gap: var(--s2); }
+h1 { font-size: 20px; font-weight: 600; margin: 0; letter-spacing: .01em; }
+.intro p { margin: 0; color: var(--fg2); max-width: 70ch; }
+.controls { display: flex; flex-wrap: wrap; gap: var(--s3) var(--s5); align-items: center; color: var(--fg3); font-size: 12px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.seg button { background: none; border: 0; color: var(--fg2); font: inherit; padding: var(--s1) var(--s3); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--raised); color: var(--fg1); }
+.controls label { display: inline-flex; gap: var(--s2); align-items: center; cursor: pointer; color: var(--fg2); }
+.controls input { accent-color: var(--fg1); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.section-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--fg3); margin: 0 0 var(--s2); }
+
+/* Simulated Anki window */
+.window { width: 100%; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); overflow: hidden; transition: max-width .25s; }
+.window .chrome { display: flex; justify-content: center; gap: var(--s5); padding: var(--s2); border-bottom: 1px solid var(--line); color: var(--fg2); font-size: 13px; }
+.window .chrome b { color: var(--fg1); font-weight: 600; }
+.window .body { padding: var(--s5) var(--s4); display: grid; gap: var(--s5); }
+.mw { max-width: 760px; width: 100%; margin: 0 auto; display: grid; gap: var(--s5); min-width: 0; }
+
+/* Deck table */
+.decks { display: grid; min-width: 0; }
+.row { display: grid; grid-template-columns: var(--cols); align-items: center; column-gap: var(--s3); padding: 6px var(--s2); border-radius: var(--r); min-width: 0; }
+.row.head { color: var(--fg3); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding-bottom: var(--s2); border-bottom: 1px solid var(--line); border-radius: 0; margin-bottom: var(--s1); }
+.row:not(.head):hover { background: var(--surface); }
+.num { text-align: right; }
+.zero { color: var(--fg4); }
+.name { display: flex; align-items: center; gap: var(--s2); min-width: 0; }
+.name .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.name .tw { width: 12px; color: var(--fg3); font-size: 10px; flex: none; text-align: center; }
+.name .opt { margin-left: auto; display: flex; gap: var(--s1); align-items: center; color: var(--fg3); font-size: 12px; opacity: 0; transition: opacity .12s; flex: none; white-space: nowrap; }
+.row:hover .opt { opacity: 1; }
+.opt svg { width: 13px; height: 13px; fill: var(--fg3); }
+.due-hi { color: var(--accent); }
+.mat { display: flex; align-items: center; gap: var(--s2); min-width: 0; }
+.bar { flex: 1; height: 6px; border-radius: 3px; overflow: hidden; display: flex; background: var(--cell-empty); min-width: 24px; }
+.bar i { display: block; height: 100%; }
+.bar .n { background: var(--fg4); }
+.bar .y { background: var(--accent-3); }
+.bar .m { background: var(--accent); }
+.mat .pct { width: 3.2em; text-align: right; color: var(--fg2); font-size: 12px; flex: none; }
+[data-tip] { cursor: default; }
+
+/* Today strip */
+.today { display: grid; gap: var(--s1); padding-top: var(--s3); border-top: 1px solid var(--line); }
+.today .l1 { color: var(--fg1); }
+.today .l1 b { color: var(--accent); font-weight: 600; }
+.today .l2 { color: var(--fg3); font-size: 12px; }
+.today .sep { color: var(--fg4); padding: 0 6px; }
+
+/* Heatmap */
+.heat { display: grid; gap: var(--s2); }
+.heat-head { display: flex; justify-content: space-between; align-items: baseline; color: var(--fg3); font-size: 12px; }
+.heat-head .yr { display: flex; gap: var(--s2); align-items: center; }
+.heat-head button { background: none; border: 0; color: var(--fg3); font: inherit; cursor: pointer; padding: 0 var(--s1); }
+.heat-head button:hover { color: var(--fg1); }
+.heat svg { width: 100%; height: auto; display: block; }
+.heat .stats { color: var(--fg3); font-size: 12px; }
+.heat .stats b { color: var(--fg1); font-weight: 600; }
+.legend { display: inline-flex; gap: 3px; align-items: center; }
+.legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+.foot { display: flex; justify-content: center; gap: var(--s2); flex-wrap: wrap; }
+.btn { background: var(--raised); border: 1px solid var(--line); color: var(--fg2); font: inherit; font-size: 12px; padding: 5px var(--s3); border-radius: var(--r); cursor: pointer; }
+.btn:hover { color: var(--fg1); border-color: var(--fg4); }
+
+/* Reviewer */
+.rev { position: relative; min-height: 420px; display: grid; grid-template-rows: 1fr auto; }
+.prog { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--cell-empty); }
+.prog i { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+.sess { position: absolute; top: var(--s3); right: var(--s4); color: var(--fg3); font-size: 12px; display: flex; gap: 6px; }
+.sess b { color: var(--fg2); font-weight: 500; }
+.card { padding: var(--s6) var(--s4) var(--s5); text-align: center; font-size: 20px; line-height: 1.5; max-width: 640px; margin: 0 auto; width: 100%; overflow-wrap: anywhere; }
+.card hr { border: 0; border-top: 1px solid var(--line); margin: var(--s5) 0; }
+.card .ans { color: var(--fg2); font-size: 18px; }
+.bbar { border-top: 1px solid var(--line); padding: var(--s3) var(--s4); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--s3); }
+.bbar .side { display: flex; gap: var(--s2); }
+.bbar .side.r { justify-content: flex-end; }
+.ease { display: flex; gap: var(--s2); flex-wrap: wrap; justify-content: center; }
+.ease button { background: var(--surface); border: 1px solid var(--line); color: var(--fg1); font: inherit; border-radius: var(--r); padding: 6px var(--s4); min-width: 76px; cursor: pointer; display: grid; gap: 1px; justify-items: center; }
+.ease button small { color: var(--fg3); font-size: 11px; }
+.ease button:hover { border-color: var(--fg3); }
+.ease button.good { border-color: var(--accent-3); }
+.ease button.good small { color: var(--accent); }
+.ease .show { min-width: 200px; }
+.ghost { background: none; border: 0; color: var(--fg3); font: inherit; font-size: 12px; cursor: pointer; padding: var(--s1) var(--s2); }
+.ghost:hover { color: var(--fg1); }
+.note { color: var(--fg3); font-size: 12px; margin: 0; }
+
+#tip { position: fixed; z-index: 50; pointer-events: none; background: var(--raised); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s2) var(--s3); font-size: 12px; color: var(--fg2); max-width: 260px; box-shadow: 0 6px 20px rgba(0,0,0,.5); white-space: pre-line; }
+#tip b { color: var(--fg1); font-weight: 600; }
+
+@media (max-width: 560px) {
+  .bbar { grid-template-columns: 1fr; }
+  .bbar .side { justify-content: center; }
+  .bbar .side.r { justify-content: center; }
+  .window .chrome { gap: var(--s3); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="page">
+  <header class="intro">
+    <h1>Anki Dashboard: deck list and reviewer</h1>
+    <p>Static mockup for approving spacing and labels. Hover any number for its breakdown, and hover a deck row to see its options group. "Your current screen" uses the figures from your screenshot; the heatmap days, retention and reviewer session are placeholders.</p>
+    <div class="controls">
+      <span>Data <span class="seg" id="mode"><button type="button" data-v="mine" aria-pressed="true">Your current screen</button><button type="button" data-v="demo" aria-pressed="false">Example: 6 decks</button></span></span>
+      <span>Window <span class="seg" id="width"><button type="button" data-v="100%" aria-pressed="true">Full</button><button type="button" data-v="900px" aria-pressed="false">900</button><button type="button" data-v="560px" aria-pressed="false">560</button></span></span>
+      <label><input type="checkbox" id="autohide" checked> Hide empty columns</label>
+    </div>
+  </header>
+
+  <section>
+    <p class="section-label">1. Deck list</p>
+    <div class="window" data-win>
+      <div class="chrome"><b>Decks</b><span>Add</span><span>Browse</span><span>Stats</span><span>Sync</span></div>
+      <div class="body">
+        <div class="mw">
+          <div class="decks" id="decks"></div>
+          <div class="today" id="today"></div>
+          <div class="heat">
+            <div class="heat-head">
+              <div class="yr"><button type="button" id="yprev" aria-label="Previous year">&lsaquo;</button><span id="ylabel">2026</span><button type="button" id="ynext" aria-label="Next year">&rsaquo;</button></div>
+              <span class="legend">less <i style="background:var(--cell-empty)"></i><i style="background:var(--accent-4)"></i><i style="background:var(--accent-3)"></i><i style="background:var(--accent-2)"></i><i style="background:var(--accent)"></i> more</span>
+            </div>
+            <svg id="heat" role="img" aria-label="Review heatmap for the year"></svg>
+            <div class="stats" id="hstats"></div>
+          </div>
+        </div>
+        <div class="foot"><button type="button" class="btn">Get Shared</button><button type="button" class="btn">Create Deck</button><button type="button" class="btn">Import File</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="section-label">3. Reviewer</p>
+    <div class="controls" style="margin-bottom:var(--s3)">
+      <label><input type="checkbox" id="showsess" checked> Session stats</label>
+      <label><input type="checkbox" id="showedit"> Edit / More buttons</label>
+      <span>Space or click to flip and answer</span>
+    </div>
+    <div class="window" data-win>
+      <div class="rev" id="rev">
+        <div class="prog" data-tip="<b>Today's queue</b>&#10;12 of 30 done (40%)"><i id="progbar" style="width:40%"></i></div>
+        <div class="sess" id="sess"></div>
+        <div class="card" id="card"></div>
+        <div class="bbar">
+          <div class="side" id="lside"></div>
+          <div class="ease" id="ease"></div>
+          <div class="side r" id="rside"></div>
+        </div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:var(--s2)">Session numbers in the corner: cards done, time, seconds per card, time left for today's queue. Hover them for labels.</p>
+  </section>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const dash = '<span class="zero">&ndash;</span>';
+const fmt = n => n ? String(n) : dash;
+const min = s => (s / 60).toFixed(1) + ' min';
+
+const MINE = {
+  decks: [
+    { name: 'Artificial Intelligence', group: 'Default', due: 0, dueAll: 0, new: 0, unseen: 0, lrnNow: 0, lrnLater: 0, lrnOther: 0, done: 16, reps: 16, secs: 118, tmrw: 0, n: 0, y: 18, m: 0, notes: 18 }
+  ],
+  today: { cards: 16, secs: 118, left: 0, streak: 1, total: 1181, week: 118, retention: null, avg: 120 },
+  heat: { seed: 7, density: 0.28 , longest: 13, current: 1, pct: 28 }
+};
+const DEMO = {
+  decks: [
+    { name: 'Artificial Intelligence', group: 'Default', due: 34, dueAll: 41, new: 10, unseen: 212, lrnNow: 2, lrnLater: 3, lrnOther: 1, done: 52, reps: 61, secs: 420, tmrw: 38, n: 212, y: 160, m: 128, notes: 410, open: true },
+    { name: 'Machine Learning', group: 'Default', depth: 1, due: 21, dueAll: 25, new: 10, unseen: 140, lrnNow: 2, lrnLater: 1, lrnOther: 0, done: 30, reps: 36, secs: 250, tmrw: 22, n: 140, y: 98, m: 72, notes: 250 },
+    { name: 'Neural Networks', group: 'Default', depth: 1, due: 13, dueAll: 16, new: 0, unseen: 72, lrnNow: 0, lrnLater: 2, lrnOther: 1, done: 22, reps: 25, secs: 170, tmrw: 16, n: 72, y: 62, m: 56, notes: 160 },
+    { name: 'Spanish Vocabulary (Frequency List 1-5000)', group: 'Languages', due: 88, dueAll: 88, new: 20, unseen: 3120, lrnNow: 4, lrnLater: 6, lrnOther: 0, done: 0, reps: 0, secs: 0, tmrw: 61, n: 3120, y: 640, m: 1240, notes: 2500 },
+    { name: 'Organic Chemistry', group: 'Science', due: 0, dueAll: 0, new: 0, unseen: 0, lrnNow: 0, lrnLater: 0, lrnOther: 0, done: 18, reps: 20, secs: 160, tmrw: 5, n: 0, y: 30, m: 214, notes: 122 },
+    { name: 'Geography', group: 'Default', due: 0, dueAll: 0, new: 0, unseen: 0, lrnNow: 0, lrnLater: 0, lrnOther: 0, done: 0, reps: 0, secs: 0, tmrw: 0, n: 0, y: 0, m: 0, notes: 0 }
+  ],
+  today: { cards: 70, secs: 580, left: 15, streak: 23, total: 61200, week: 4380, retention: 89, avg: 96 },
+  heat: { seed: 3, density: 0.82, longest: 61, current: 23, pct: 81 }
+};
+
+const COLS = [
+  { key: 'due', h: 'Due', w: '3.4em', ht: 'Reviews due today', cell: d => `<span class="num ${d.due ? 'due-hi' : ''}" data-tip="${esc(`<b>Due today ${d.due}</b>\nAll due, ignoring limits ${d.dueAll}`)}">${fmt(d.due)}</span>` },
+  { key: 'new', h: 'New', w: '3.4em', ht: 'New cards you will see today', cell: d => `<span class="num" data-tip="${esc(`<b>New today ${d.new}</b>\nUnseen in deck ${d.unseen}`)}">${fmt(d.new)}</span>` },
+  { key: 'learn', h: 'Learn', w: '3.6em', ht: 'Cards in learning', val: d => d.lrnNow + d.lrnLater, cell: d => `<span class="num" data-tip="${esc(`<b>Learning ${d.lrnNow + d.lrnLater + d.lrnOther}</b>\nDue now ${d.lrnNow}\nLater today ${d.lrnLater}\nOther day ${d.lrnOther}`)}">${fmt(d.lrnNow + d.lrnLater)}</span>` },
+  { key: 'done', h: 'Done', w: '3.4em', ht: 'Cards reviewed today', cell: d => `<span class="num" data-tip="${esc(`<b>Reviewed today ${d.done}</b>\nRepetitions ${d.reps}\nTime ${min(d.secs)}`)}">${fmt(d.done)}</span>` },
+  { key: 'tmrw', h: 'Tmrw', w: '3.4em', ht: 'Due tomorrow', cell: d => `<span class="num" data-tip="${esc(`<b>Due tomorrow ${d.tmrw}</b>`)}">${fmt(d.tmrw)}</span>` },
+  { key: 'mat', h: 'Maturity', w: 'minmax(80px, 9em)', ht: 'New / young / mature cards', always: true, cell: d => {
+      const t = d.n + d.y + d.m, p = v => t ? (v / t * 100) : 0, pm = Math.round(p(d.m));
+      const tip = `<b>${t} cards, ${d.notes} notes</b>\nNew ${d.n}\nYoung ${d.y} (interval under 21 days)\nMature ${d.m}\n${pm}% mature`;
+      return `<div class="mat" data-tip="${esc(tip)}"><div class="bar"><i class="n" style="width:${p(d.n)}%"></i><i class="y" style="width:${p(d.y)}%"></i><i class="m" style="width:${p(d.m)}%"></i></div><span class="pct">${t ? pm + '%' : dash}</span></div>`;
+  } }
+];
+const esc = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const gear = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.4 1l.3 1.8c.5.2 1 .5 1.4.8l1.7-.7 1.4 2.4-1.4 1.2a5 5 0 010 1.6l1.4 1.2-1.4 2.4-1.7-.7c-.4.3-.9.6-1.4.8L9.4 15H6.6l-.3-1.8c-.5-.2-1-.5-1.4-.8l-1.7.7-1.4-2.4 1.4-1.2a5 5 0 010-1.6L1.8 6.7l1.4-2.4 1.7.7c.4-.3.9-.6 1.4-.8L6.6 1h2.8zM8 5.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>';
+
+let state = { mode: 'mine', year: 2026 };
+
+function renderDecks() {
+  const D = state.mode === 'mine' ? MINE : DEMO;
+  const hide = $('#autohide').checked;
+  const val = (c, d) => c.val ? c.val(d) : d[c.key];
+  const cols = COLS.filter(c => c.always || !hide || D.decks.some(d => val(c, d)));
+  const grid = `minmax(0, 1fr) ${cols.map(c => c.w).join(' ')}`;
+  let h = `<div class="row head" style="--cols:${grid}"><span>Deck</span>${cols.map(c => `<span class="${c.key === 'mat' ? '' : 'num'}" data-tip="${esc(c.ht)}">${c.h}</span>`).join('')}</div>`;
+  for (const d of D.decks) {
+    const tw = d.open ? '&#9662;' : (d.depth ? '' : '');
+    h += `<div class="row" style="--cols:${grid}"><div class="name" style="padding-left:${(d.depth || 0) * 18}px"><span class="tw">${tw}</span><span class="t" data-tip="${esc(d.name)}">${d.name}</span><span class="opt">${d.group}${gear}</span></div>${cols.map(c => c.cell(d)).join('')}</div>`;
+  }
+  $('#decks').innerHTML = h;
+
+  const t = D.today, spc = t.cards ? (t.secs / t.cards).toFixed(1) : null, sep = '<span class="sep">&middot;</span>';
+  $('#today').innerHTML =
+    `<div class="l1"><b>${t.cards}</b> cards${sep}${min(t.secs)}${sep}${spc ? spc + ' s/card' : dash}${sep}<span data-tip="${esc('<b>Time left today</b>\nRemaining due cards at today’s s/card')}">~${t.left} min left</span>${sep}streak ${t.streak}</div>` +
+    `<div class="l2">all time ${min(t.total)}${sep}this week ${min(t.week)}${sep}<span data-tip="${esc(t.retention == null ? '<b>Retention</b>\nShare of reviews in the last 30 days answered Hard, Good or Easy. Placeholder in this mockup.' : '<b>Retention, last 30 days</b>\nFSRS desired 90%, actual ' + t.retention + '%')}">retention ${t.retention == null ? '91%' : t.retention + '%'}</span>${sep}<span data-tip="${esc('<b>Average on days you studied</b>\nDays with no reviews are not counted')}">${t.avg} cards/day avg (study days)</span></div>`;
+  renderHeat();
+}
+
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+function renderHeat() {
+  const D = state.mode === 'mine' ? MINE : DEMO, H = D.heat, y = state.year;
+  const r = rng(H.seed + y), cell = 11, gap = 2, step = cell + gap;
+  const start = new Date(y, 0, 1), off = (start.getDay() + 6) % 7; // weeks start on Monday
+  const days = (new Date(y + 1, 0, 1) - start) / 864e5, weeks = Math.ceil((days + off) / 7);
+  const W = weeks * step, top = 14;
+  let svg = '', months = '';
+  const fill = v => !v ? 'var(--cell-empty)' : v < 15 ? 'var(--accent-4)' : v < 40 ? 'var(--accent-3)' : v < 100 ? 'var(--accent-2)' : 'var(--accent)';
+  const today = new Date(2026, 9, 19);
+  for (let i = 0; i < days; i++) {
+    const dt = new Date(y, 0, 1 + i), idx = i + off, wk = Math.floor(idx / 7), dow = idx % 7;
+    if (dt.getDate() === 1) months += `<text x="${wk * step}" y="9" font-size="9" fill="var(--fg3)">${dt.toLocaleString('en', { month: 'short' })}</text>`;
+    const future = dt > today;
+    // clustered study days: a slow wave plus noise
+    const wave = Math.sin(i / 23 + H.seed) * 0.5 + 0.5;
+    const studied = !future && r() < H.density * (0.4 + wave);
+    const cards = studied ? Math.round(5 + r() * r() * 260) : 0;
+    const mins = (cards * 7.3 / 60).toFixed(1);
+    const label = dt.toLocaleDateString('en', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    svg += `<rect x="${wk * step}" y="${top + dow * step}" width="${cell}" height="${cell}" rx="2" fill="${future ? 'transparent' : fill(cards)}" ${future ? 'stroke="var(--line)" stroke-width="1"' : ''} data-tip="${esc(`<b>${label}</b>\n${cards ? cards + ' cards, ' + mins + ' min' : 'No reviews'}`)}"/>`;
+  }
+  const el = $('#heat');
+  el.setAttribute('viewBox', `0 0 ${W} ${top + 7 * step}`);
+  el.innerHTML = months + svg;
+  $('#ylabel').textContent = y;
+  $('#hstats').innerHTML = [
+    `<span data-tip="${esc('<b>Daily average</b>\nOn days you studied; rest days are not counted')}"><b>${D.today.avg}</b> cards/study day</span>`,
+    `<b>${H.pct}%</b> of days studied`,
+    `longest streak <b>${H.longest}</b>`,
+    `current <b>${H.current}</b>`
+  ].join('<span class="sep" style="color:var(--fg4);padding:0 6px">&middot;</span>');
+}
+
+// Reviewer
+const CARDS = [
+  { q: 'What does the bias-variance tradeoff describe?', a: 'Lowering a model’s error from wrong assumptions (bias) tends to raise its sensitivity to the training sample (variance), and the reverse.' },
+  { q: 'What is the purpose of a validation set?', a: 'To tune hyperparameters and pick a model without touching the test set.' }
+];
+let rv = { i: 0, shown: false, done: 12, total: 30, secs: 92 };
+function renderRev() {
+  const c = CARDS[rv.i % CARDS.length];
+  $('#card').innerHTML = rv.shown ? `${c.q}<hr><div class="ans">${c.a}</div>` : c.q;
+  const pct = Math.round(rv.done / rv.total * 100);
+  $('#progbar').style.width = pct + '%';
+  $('.prog').dataset.tip = `<b>Today's queue</b>\n${rv.done} of ${rv.total} done (${pct}%)`;
+  const spc = rv.secs / rv.done, left = Math.round((rv.total - rv.done) * spc / 60);
+  const mmss = `${Math.floor(rv.secs / 60)}:${String(Math.round(rv.secs % 60)).padStart(2, '0')}`;
+  $('#sess').hidden = !$('#showsess').checked;
+  $('#sess').innerHTML = `<span data-tip="Cards done this session"><b>${rv.done}</b></span>&middot;<span data-tip="Time this session">${mmss}</span>&middot;<span data-tip="Seconds per card">${spc.toFixed(1)}s</span>&middot;<span data-tip="${esc('<b>Time left</b>\n' + (rv.total - rv.done) + ' cards at this pace')}">~${left}m</span>`;
+  const extra = $('#showedit').checked;
+  $('#lside').innerHTML = extra ? '<button type="button" class="ghost">Edit</button>' : '';
+  $('#rside').innerHTML = extra ? '<button type="button" class="ghost">More</button>' : '';
+  $('#ease').innerHTML = rv.shown
+    ? [['Again', '1m'], ['Hard', '6m'], ['Good', '10m', 'good'], ['Easy', '4d']].map(([l, t, k], n) => `<button type="button" class="${k || ''}" data-ease="${n}">${l}<small>${t}</small></button>`).join('')
+    : '<button type="button" class="show" data-flip>Show answer</button>';
+}
+function advance() {
+  if (!rv.shown) { rv.shown = true; }
+  else { rv.shown = false; rv.i++; rv.secs += 6 + Math.random() * 4; if (rv.done < rv.total) rv.done++; }
+  renderRev();
+}
+$('#ease').addEventListener('click', e => { if (e.target.closest('button')) advance(); });
+document.addEventListener('keydown', e => { if (e.code === 'Space' && !e.target.closest('input,button')) { e.preventDefault(); advance(); } });
+
+// Controls
+function seg(id, fn) {
+  $(id).addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $(id).querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    fn(b.dataset.v);
+  });
+}
+seg('#mode', v => { state.mode = v; renderDecks(); });
+seg('#width', v => document.querySelectorAll('[data-win]').forEach(w => w.style.maxWidth = v));
+$('#autohide').addEventListener('change', renderDecks);
+$('#showsess').addEventListener('change', renderRev);
+$('#showedit').addEventListener('change', renderRev);
+$('#yprev').addEventListener('click', () => { state.year--; renderHeat(); });
+$('#ynext').addEventListener('click', () => { if (state.year < 2026) { state.year++; renderHeat(); } });
+
+// Tooltip
+const tip = $('#tip');
+document.addEventListener('mouseover', e => {
+  const t = e.target.closest('[data-tip]');
+  if (!t) { tip.hidden = true; return; }
+  tip.innerHTML = t.dataset.tip;
+  tip.hidden = false;
+  const r = t.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8);
+  let y = r.top - h - 8; if (y < 8) y = r.bottom + 8;
+  tip.style.left = x + 'px'; tip.style.top = y + 'px';
+});
+addEventListener('scroll', () => { tip.hidden = true; }, { passive: true });
+
+renderDecks();
+renderRev();
+</script>
