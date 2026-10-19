@@ -8,7 +8,7 @@
   const cfg = window.adStats;
   let scope = null; // the search and range the sections were built for
   let waiting = false;
-  let sections = { summary: "", study: "" };
+  let sections = { scope: "", summary: "", study: "" };
   let unit = "day";
 
   function pageScope() {
@@ -30,6 +30,11 @@
   }
 
   function place(grid) {
+    const head = own("ad-scope", function () { return document.createElement("div"); });
+    if (head.nextElementSibling !== grid && head.nextElementSibling !== document.getElementById("ad-sum")) {
+      grid.parentNode.insertBefore(head, grid);
+    }
+    if (head.innerHTML !== sections.scope) head.innerHTML = sections.scope;
     if (cfg.summary) {
       const sum = own("ad-sum", function () { return document.createElement("div"); });
       if (sum.nextElementSibling !== grid) grid.parentNode.insertBefore(sum, grid);

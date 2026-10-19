@@ -1,4 +1,5 @@
-"""The stats page: a summary header and a study-time card added to Anki's graphs page.
+"""The stats page: a summary header and a study-time card added to Anki's graphs page,
+and a header naming the deck or search that Save PDF prints in place of its controls.
 
 Both count the cards the page shows (its deck, collection or search) and, like the
 page, the last 12 months or all history. `stats_page.js` asks for them again whenever
@@ -12,7 +13,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 
 from . import queries, stats
-from .fmt import DASH, SEP, duration, percent, tip
+from .fmt import DASH, SEP, duration, esc, percent, tip
 from .heatmap import MONTHS, day_label
 
 RANGE_DAYS = 365  # the page's "last 12 months"
@@ -263,8 +264,30 @@ def render_study_time(p: StatsPage) -> str:
     )
 
 
-def render(p: StatsPage) -> dict[str, str]:
-    return {"summary": render_summary(p), "study": render_study_time(p)}
+def scope_title(search: str, current_deck: str) -> str:
+    """What the page counts: the deck's name for the deck button's search, the whole
+    collection for an empty one, otherwise the search as typed."""
+    search = search.strip()
+    if not search:
+        return "Whole collection"
+    if search == "deck:current":
+        return current_deck
+    return search
+
+
+def render_scope(title: str, p: StatsPage, printed: date) -> str:
+    """The printed page's header, in place of the scope and range controls. It's dated
+    by the calendar, not by Anki's day, which starts at the rollover hour."""
+    when = f"{MONTHS[printed.month - 1]} {printed.day}, {printed.year}"
+    return f"<b>{esc(title)}</b><span>{p.range_label}{SEP}{when}</span>"
+
+
+def render(p: StatsPage, title: str = "", printed: date | None = None) -> dict[str, str]:
+    return {
+        "scope": render_scope(title, p, printed or date.today()) if title else "",
+        "summary": render_summary(p),
+        "study": render_study_time(p),
+    }
 
 
 def build(col, search: str, all_history: bool) -> dict[str, str]:
@@ -274,12 +297,13 @@ def build(col, search: str, all_history: bool) -> dict[str, str]:
     try:
         cards = queries.search_filter(col, search)
     except Exception:  # anki.errors.SearchError, kept generic so older versions load
-        return {"summary": "", "study": ""}
+        return {"scope": "", "summary": "", "study": ""}
     return render(
         StatsPage(
             today=clock.date,
             days=queries.day_reviews(col, clock, cards),
             retention=queries.retention(col, clock, cards=cards),
             all_history=all_history,
-        )
+        ),
+        scope_title(search, col.decks.current()["name"]),
     )

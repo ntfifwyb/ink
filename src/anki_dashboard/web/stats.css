@@ -149,9 +149,18 @@ body {
 .ad-st-empty { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 120px; color: var(--ad-fg3); }
 
 /* Save PDF prints the page: Anki then lays the cards out as blocks, dropping the grid's
-   gap, and lifts the range bar out of the flow, over the summary header. */
+   gap, and lifts the range bar out of the flow, over the summary header. The bar's
+   controls give way to #ad-scope, a plain header naming the deck, range and date. */
+#ad-scope { display: none; }
 @media print {
   .range-box:not(#_) { position: static; }
+  body:has(#ad-scope:not(:empty)) :is(.range-box, .range-box-pad):not(#_) { display: none; }
+  #ad-scope:not(:empty) { display: grid; justify-items: center; gap: 4px; padding: 20px 0 16px; }
+  #ad-scope b { color: var(--ad-fg1); font-size: 18px; font-weight: 600; }
+  #ad-scope span { color: var(--ad-fg3); font-size: 12px; }
+  /* Anki sizes the grid as 100vw - 3em from a 1em left margin; without a scrollbar
+     that leaves 2em on the right */
+  .graphs-container:not(#_), #ad-sum { width: auto; margin-left: 1em; margin-right: 1em; }
   #ad-sum + .graphs-container:not(#_) { margin-top: 0; }
   .graphs-container > .container:not(#_), #ad-study { margin-bottom: 1em; break-inside: avoid; }
 }
