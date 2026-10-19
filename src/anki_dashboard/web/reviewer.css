@@ -1,0 +1,25 @@
+/* anki-dashboard: the reviewer's card page. The card keeps the note's styling; only
+   Anki's night-mode page color is redefined, so the default card background matches
+   the toolbar and bottom bar while a note that sets its own background keeps it. */
+
+body.nightMode { --canvas: var(--ad-bg); }
+
+#ad-rev {
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Today's queue: 2px along the top, with a taller invisible strip to hover */
+.ad-prog { position: fixed; z-index: 40; top: 0; left: 0; right: 0; height: 2px; background: var(--ad-empty); }
+.ad-prog::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; }
+.ad-prog i { display: block; height: 100%; background: var(--ad-accent); transition: width .3s; }
+
+/* Session stats, inside the body's top margin so they clear the card text */
+.ad-sess {
+  position: fixed; z-index: 40; top: 4px; right: 12px; max-width: calc(100vw - 24px);
+  color: var(--ad-fg3); font-size: 12px; line-height: 16px; white-space: nowrap;
+}
+.ad-sess b { color: var(--ad-fg2); font-weight: 500; }
+.ad-sess .ad-sep { padding: 0 4px; }
+
+@media (prefers-reduced-motion: reduce) { .ad-prog i { transition: none; } }

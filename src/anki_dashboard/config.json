@@ -19,5 +19,10 @@
     "hide_empty_columns": true,
     "today_strip": true,
     "heatmap": true
+  },
+  "reviewer": {
+    "progress_bar": true,
+    "session_stats": true,
+    "edit_more": false
   }
 }

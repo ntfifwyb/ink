@@ -37,9 +37,17 @@ class DeckListConfig:
 
 
 @dataclass
+class ReviewerConfig:
+    progress_bar: bool = True
+    session_stats: bool = True
+    edit_more: bool = False
+
+
+@dataclass
 class Config:
     colors: dict[str, str] = field(default_factory=lambda: dict(COLORS))
     deck_list: DeckListConfig = field(default_factory=DeckListConfig)
+    reviewer: ReviewerConfig = field(default_factory=ReviewerConfig)
 
 
 def load(raw: Any) -> Config:
@@ -60,6 +68,12 @@ def load(raw: Any) -> Config:
         for key in ("hide_empty_columns", "today_strip", "heatmap"):
             if isinstance(deck.get(key), bool):
                 setattr(cfg.deck_list, key, deck[key])
+
+    rev = raw.get("reviewer")
+    if isinstance(rev, dict):
+        for key in ("progress_bar", "session_stats", "edit_more"):
+            if isinstance(rev.get(key), bool):
+                setattr(cfg.reviewer, key, rev[key])
     return cfg
 
 

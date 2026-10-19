@@ -125,6 +125,46 @@ class DeckCountsTest(CollectionTest):
         self.assertEqual(counts[child].unseen, 3)
 
 
+class ReviewerQueriesTest(CollectionTest):
+    def answer(self, n, ease=4):
+        self.col.decks.select(self.deck)
+        for _ in range(n):
+            card = self.col.sched.getCard()
+            card.start_timer()
+            self.col.sched.answerCard(card, ease)
+
+    def test_answers_since_counts_only_later_answers(self):
+        self.add_notes(4)
+        self.answer(1)
+        since = self.col.db.scalar("select max(id) from revlog") + 1
+        self.answer(2)
+        (cid,) = self.col.db.list("select cid from revlog order by id desc limit 1")
+        self.add_revlog(0, cid=cid, ease=1)  # the same card again, later today
+        self.add_revlog(0, cid=cid, ease=0, type_=4)  # manual reschedule, not an answer
+        cards, reps, secs = queries.answers_since(self.col, since)
+        self.assertEqual((cards, reps), (2, 3))
+        self.assertGreaterEqual(secs, 0)
+        self.assertEqual(queries.answers_since(self.col, since + DAY * 1000), (0, 0, 0))
+
+    def test_cards_done_today_by_deck_including_filtered_cards(self):
+        child = self.col.decks.id("AI::ML")
+        other = self.col.decks.id("Other")
+        self.add_notes(1)
+        self.add_notes(2, deck=child)
+        self.add_notes(1, deck=other)
+        for cid in self.col.db.list("select id from cards"):
+            self.add_revlog(0, cid=cid)
+            self.add_revlog(0, cid=cid)
+        self.add_revlog(1, cid=cid)  # yesterday
+        ai = [self.deck, child]
+        self.assertEqual(queries.cards_done_today(self.col, self.clock, ai), 3)
+        # a card moved into a filtered deck still counts for its home deck
+        self.set_card(cid, did=self.col.decks.id("Cram"), odid=self.deck)
+        self.assertEqual(queries.cards_done_today(self.col, self.clock, ai), 4)
+        self.assertEqual(queries.cards_done_today(self.col, self.clock, [other]), 0)
+        self.assertEqual(queries.cards_done_today(self.col, self.clock, []), 0)
+
+
 class DayReviewsTest(CollectionTest):
     def test_answers_grouped_by_day_offset(self):
         for days_ago, n in ((0, 2), (1, 1), (40, 3)):

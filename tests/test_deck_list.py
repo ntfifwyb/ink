@@ -166,6 +166,7 @@ class ConfigTest(unittest.TestCase):
                     "today_strip": "yes",
                     "heatmap": False,
                 },
+                "reviewer": {"progress_bar": False, "session_stats": 0, "edit_more": True},
             }
         )
         self.assertEqual(cfg.colors["bg"], config.COLORS["bg"])
@@ -174,6 +175,10 @@ class ConfigTest(unittest.TestCase):
         self.assertEqual(cfg.deck_list.columns, ["done"])
         self.assertTrue(cfg.deck_list.today_strip)
         self.assertFalse(cfg.deck_list.heatmap)
+        self.assertEqual(
+            cfg.reviewer,
+            config.ReviewerConfig(progress_bar=False, session_stats=True, edit_more=True),
+        )
 
     def test_not_a_dict(self):
         self.assertEqual(config.load(None), config.Config())

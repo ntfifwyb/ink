@@ -6,4 +6,9 @@
 - `today_strip`: show the two-line summary of today's study under the decks.
 - `heatmap`: show the review heatmap for a calendar year, with the average, share of days studied and streaks underneath. The arrows switch years.
 
-Hover any number in the deck list for its breakdown.
+**reviewer**
+- `progress_bar`: a 2px bar along the top showing how much of today's queue for the deck is done.
+- `session_stats`: cards, time, seconds per card and time left for this session, in the top right corner.
+- `edit_more`: show Anki's Edit and More buttons beside the answer buttons. Hidden by default; E and M still work.
+
+Hover any number for its breakdown.

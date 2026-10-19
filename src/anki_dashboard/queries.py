@@ -124,6 +124,30 @@ def secs_per_card(col, clock: DayClock, days: int = 30) -> float | None:
     return ms / 1000 / reps if reps else None
 
 
+def answers_since(col, since_ms: int) -> tuple[int, int, float]:
+    """Cards, answers and seconds answered since `since_ms` (epoch milliseconds)."""
+    cards, reps, ms = col.db.first(
+        "select count(distinct cid), count(*), sum(time) from revlog where ease > 0 and id >= ?",
+        since_ms,
+    )
+    return cards, reps, (ms or 0) / 1000
+
+
+def cards_done_today(col, clock: DayClock, deck_ids: list[int]) -> int:
+    """Cards answered today whose deck, or home deck for cards in a filtered deck,
+    is one of `deck_ids`."""
+    if not deck_ids:
+        return 0
+    ids = ",".join(str(int(d)) for d in deck_ids)
+    return col.db.scalar(
+        f"""
+        select count(distinct r.cid) from revlog r join cards c on c.id = r.cid
+        where r.id >= ? and r.ease > 0 and (c.did in ({ids}) or c.odid in ({ids}))
+        """,
+        clock.start_ms,
+    )
+
+
 def fsrs_enabled(col) -> bool:
     return bool(col.get_config("fsrs", False))
 
