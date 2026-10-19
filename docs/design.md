@@ -28,6 +28,7 @@ Monochrome: near-black background, four gray text levels, and white as the only 
 One font stack (`"Segoe UI", system-ui, ...`) with tabular figures. Spacing scale of 4, 8, 12, 16, 24 and 32 px.
 
 ## Screens
+- **Window chrome:** the top toolbar, the menu bar and the deck list and overview bottom bars take the page background, so the window reads as one surface. Toolbar links and bottom buttons are `fg2`, `fg1` on hover; buttons have a `line` border. The reviewer's bars keep Anki's look until the reviewer is themed.
 - **Deck list:** columns Due, New, Learn, Done, Tmrw, Maturity; empty columns hide automatically; options group and gear appear on row hover, over the end of the deck name. Below 640px the columns narrow and the maturity percent hides. A two-line today strip and a full-year heatmap (weeks start Monday) with one stats line.
 - **Overview:** the same counts, time left, maturity bar and today line; restyled Study Now.
 - **Reviewer:** 2px progress bar for today's queue, toggleable session stats (cards, time, s/card, time left), minimal answer bar with Edit/More optional.

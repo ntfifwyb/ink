@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from aqt import gui_hooks, mw
-from aqt.deckbrowser import DeckBrowser, DeckBrowserContent
+from aqt.deckbrowser import DeckBrowser, DeckBrowserBottomBar, DeckBrowserContent
+from aqt.overview import OverviewBottomBar
+from aqt.toolbar import TopToolbar
 from aqt.webview import WebContent
 
 from . import config, deck_list
@@ -24,6 +26,14 @@ def on_webview_will_set_content(content: WebContent, context: object | None) -> 
         content.css += [_web("dashboard.css"), _web("deck_list.css")]
         content.js.append(_web("dashboard.js"))
         content.head += f"<style>{config.css_variables(_config().colors)}</style>"
+    elif isinstance(context, (TopToolbar, DeckBrowserBottomBar, OverviewBottomBar)):
+        content.css.append(_web("chrome.css"))
+        content.head += f"<style>{config.css_variables(_config().colors)}</style>"
+
+
+def style_menu_bar() -> None:
+    """The menu bar is a Qt widget, so it takes a Qt stylesheet instead of CSS."""
+    mw.form.menubar.setStyleSheet(config.menu_bar_qss(_config().colors))
 
 
 def on_deck_browser_will_render_content(browser: DeckBrowser, content: DeckBrowserContent) -> None:
@@ -43,6 +53,8 @@ def on_js_message(handled: tuple[bool, object], message: str, context: object) -
 
 
 def on_config_updated(_raw: dict) -> None:
+    style_menu_bar()
+    mw.toolbar.draw()
     if mw.state == "deckBrowser":
         mw.deckBrowser.refresh()
 
@@ -53,3 +65,4 @@ def init() -> None:
     gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
     gui_hooks.deck_browser_will_render_content.append(on_deck_browser_will_render_content)
     gui_hooks.webview_did_receive_js_message.append(on_js_message)
+    gui_hooks.main_window_did_init.append(style_menu_bar)

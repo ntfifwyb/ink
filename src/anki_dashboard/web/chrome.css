@@ -1,0 +1,23 @@
+/* anki-dashboard: Anki's top toolbar and the deck list and overview bottom bars,
+   recolored by redefining Anki's own theme variables so its layout stays as is.
+   In review the toolbar is .flat and copies the card's background, so it is left alone. */
+
+body:not(.flat) {
+  --canvas: var(--ad-bg);
+  --canvas-elevated: var(--ad-bg);
+  --canvas-glass: transparent;
+  --button-bg: var(--ad-bg);
+  --border-subtle: var(--ad-line);
+  --fg: var(--ad-fg2);
+  color: var(--ad-fg2);
+}
+body.fancy:not(.flat) .toolbar,
+body.fancy:not(.flat) .toolbar:hover { box-shadow: none; }
+body:not(.flat) .hitem:hover { color: var(--ad-fg1); }
+
+/* Bottom bar buttons */
+#header button {
+  background: var(--ad-bg); color: var(--ad-fg2);
+  border: 1px solid var(--ad-line); border-radius: 6px; box-shadow: none;
+}
+#header button:hover { color: var(--ad-fg1); border-color: var(--ad-fg4); }
