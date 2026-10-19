@@ -1,0 +1,43 @@
+/* Deck overview: Anki's <center> with the deck name, description and our .ad-ov
+   block, restyled to one centered 480px column that shrinks with the window. */
+
+body { margin: 0; }
+body > center { display: block; max-width: 480px; margin: 0 auto; padding: 40px 16px 32px; }
+body > center > h3 {
+  margin: 0 0 8px; color: var(--ad-fg1); font-size: 20px; font-weight: 600;
+  overflow-wrap: anywhere;
+}
+body > center .description {
+  max-width: none; margin: 0 0 8px; padding: 0; border: 0; background: none;
+  color: var(--ad-fg2); font-size: 13px; overflow-wrap: anywhere;
+}
+body > center .smallLink { color: var(--ad-fg3); font-size: 12px; }
+
+.ad-ov { display: grid; gap: 24px; margin-top: 24px; }
+
+.ad-cnts { display: flex; justify-content: center; gap: 40px; }
+.ad-cnt { display: grid; justify-items: center; gap: 2px; min-width: 3em; }
+.ad-cnt b { color: var(--ad-accent); font-size: 32px; font-weight: 600; line-height: 1.1; }
+.ad-cnt b .ad-zero { font-weight: 400; }
+.ad-cnt span:not(.ad-zero) {
+  color: var(--ad-fg3); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .07em;
+}
+
+.ad-go { display: grid; justify-items: center; gap: 8px; }
+button#study.ad-study {
+  appearance: none; min-width: 200px; padding: 10px 32px; cursor: pointer;
+  background: var(--ad-accent); color: var(--ad-bg);
+  border: 0; border-radius: 6px; box-shadow: none;
+  font: inherit; font-size: 15px; font-weight: 600;
+}
+button#study.ad-study:hover { background: var(--ad-accent2); }
+button#study.ad-study:focus { outline: none; }
+button#study.ad-study:focus-visible { outline: 1px solid var(--ad-accent); outline-offset: 3px; }
+.ad-left { color: var(--ad-fg2); font-size: 13px; }
+
+.ad-ov-mat { display: grid; gap: 8px; }
+.ad-ov-mat .ad-bar { flex: none; }
+.ad-ov-legend, .ad-ov-today { color: var(--ad-fg3); font-size: 12px; }
+.ad-ov-legend b, .ad-ov-today b { color: var(--ad-fg1); font-weight: 600; }
+.ad-ov-today { padding-top: 12px; border-top: 1px solid var(--ad-line); }

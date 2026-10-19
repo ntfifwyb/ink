@@ -1,0 +1,12 @@
+/* anki-dashboard: Anki's congratulations page, shown in place of the overview when a
+   deck is finished for today. It is a SvelteKit page, so only its theme variables
+   are redefined; the add-on links this file in after Anki styles the page. */
+
+body {
+  --canvas: var(--ad-bg);
+  --fg: var(--ad-fg1);
+  --fg-link: var(--ad-fg1);
+  background: var(--ad-bg);
+}
+/* :not(#_) lifts the rule above the page's scoped link styles */
+a:not(#_) { text-decoration: underline; text-decoration-color: var(--ad-fg3); text-underline-offset: 3px; }

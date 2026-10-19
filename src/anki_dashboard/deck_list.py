@@ -100,30 +100,39 @@ def _tmrw(r: Row) -> str:
     )
 
 
-def _maturity(r: Row) -> str:
-    c = r.counts
-    total = c.total
+def mature_share(c: DeckCounts) -> float:
+    return c.mature / c.total if c.total else 0.0
+
+
+def maturity_bar(c: DeckCounts) -> str:
+    """New, young and mature cards as one bar, widths proportional to the counts."""
 
     def width(n: int) -> str:
-        return f"{n / total * 100:.2f}%" if total else "0"
+        return f"{n / c.total * 100:.2f}%" if c.total else "0"
 
-    share = c.mature / total if total else 0.0
-    bar = (
+    return (
         f'<div class="ad-bar"><i class="ad-new" style="width:{width(c.unseen)}"></i>'
         f'<i class="ad-young" style="width:{width(c.young)}"></i>'
         f'<i class="ad-mature" style="width:{width(c.mature)}"></i></div>'
     )
-    label = percent(share) if total else DASH
+
+
+def maturity_tip(c: DeckCounts) -> str:
+    return tip(
+        f"{c.total} cards, {c.notes} notes",
+        f"New {c.unseen}",
+        f"Young {c.young} (interval under {stats.MATURE_IVL} days)",
+        f"Mature {c.mature}",
+        f"{percent(mature_share(c))} mature",
+    )
+
+
+def _maturity(r: Row) -> str:
+    c = r.counts
+    label = percent(mature_share(c)) if c.total else DASH
     return (
-        '<td class="ad-mat"'
-        + tip(
-            f"{total} cards, {c.notes} notes",
-            f"New {c.unseen}",
-            f"Young {c.young} (interval under {stats.MATURE_IVL} days)",
-            f"Mature {c.mature}",
-            f"{percent(share)} mature",
-        )
-        + f'><div class="ad-mat-in">{bar}<span class="ad-pct">{label}</span></div></td>'
+        f'<td class="ad-mat"{maturity_tip(c)}><div class="ad-mat-in">{maturity_bar(c)}'
+        f'<span class="ad-pct">{label}</span></div></td>'
     )
 
 
@@ -252,8 +261,8 @@ def rows_from_tree(col, tree, rolled: dict[int, DeckCounts], current_id: int) ->
     return rows
 
 
-def _stats_tree(node) -> stats.TreeNode:
-    return stats.TreeNode(node.deck_id, [_stats_tree(c) for c in node.children])
+def stats_tree(node) -> stats.TreeNode:
+    return stats.TreeNode(node.deck_id, [stats_tree(c) for c in node.children])
 
 
 def today_summary(col, tree, clock: queries.DayClock, days: dict[int, tuple[int, float]]) -> Today:
@@ -281,7 +290,7 @@ def build(col, tree, cfg: Config, year: int | None = None) -> tuple[str, str]:
     """HTML for the deck browser's tree and stats sections. `year` is the heatmap's
     year, this year when None or out of range."""
     clock = queries.DayClock.of(col)
-    rolled = stats.rollup([_stats_tree(c) for c in tree.children], queries.deck_counts(col, clock))
+    rolled = stats.rollup([stats_tree(c) for c in tree.children], queries.deck_counts(col, clock))
     rows = rows_from_tree(col, tree, rolled, col.decks.get_current_id())
     dl = cfg.deck_list
     table = render_table(rows, visible_columns(rows, dl.columns, dl.hide_empty_columns))
