@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-10-20
+
+### Fixed
+- Save PDF on the stats page: a graph that starts a new page no longer sits against the page's top edge. Every card has the same 16px of space above it and at the sides.
+
 ## [0.6.2] - 2026-10-20
 
 ### Changed
