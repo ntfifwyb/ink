@@ -1,5 +1,5 @@
-"""The deck overview: the deck's counts, Study Now with time left, the maturity bar
-and a today line.
+"""The deck overview: the deck's counts, a plain Study button and one line with time
+left, maturity and reviews due tomorrow; the detail is in tooltips.
 
 `build` returns the HTML that replaces the overview's counts table (Anki keeps the
 deck name and description above it). Counts include subdecks, as in the deck list.
@@ -36,15 +36,15 @@ def render(d: Deck) -> str:
     c = d.counts
     counts = (
         _count(
-            "Due",
+            "due",
             d.due,
             d.buried_due,
             f"Due today {d.due}",
             f"All due, ignoring limits {c.due_all}",
         )
-        + _count("New", d.new, d.buried_new, f"New today {d.new}", f"Unseen in deck {c.unseen}")
+        + _count("new", d.new, d.buried_new, f"New today {d.new}", f"Unseen in deck {c.unseen}")
         + _count(
-            "Learn",
+            "learn",
             d.learn,
             d.buried_learn,
             f"Learning {c.learn_now + c.learn_later + c.learn_other}",
@@ -53,47 +53,31 @@ def render(d: Deck) -> str:
             f"Other day {c.learn_other}",
         )
     )
+    study = '<button id=study class="ad-study" onclick="pycmd(\'study\')" autofocus>Study</button>'
 
     cards_left = d.due + d.new + d.learn
     spc = c.secs / c.reps if c.reps else d.recent_secs_per_card
+    done = f"Done today {c.done} cards"
+    if c.reps:
+        done += f" in {duration(c.secs)}, {c.secs / c.reps:.1f} s/card"
     if spc is None:
-        left = DASH
+        left = f"<span{tip('Time left today', done)}>{DASH} left</span>"
     else:
         left = (
-            f"<span{tip('Time left today', f'{cards_left} cards at {spc:.1f} s/card')}>"
+            f"<span{tip('Time left today', f'{cards_left} cards at {spc:.1f} s/card', done)}>"
             f"~{stats.minutes_left(cards_left, spc):.0f} min left</span>"
         )
-    go = (
-        '<div class="ad-go"><button id=study class="ad-study" onclick="pycmd(\'study\')" '
-        f'autofocus>Study Now</button><div class="ad-left">{left}</div></div>'
-    )
-
-    legend = SEP.join(
+    mature = percent(deck_list.mature_share(c)) if c.total else DASH
+    line = SEP.join(
         [
-            f"new {count(c.unseen)}",
-            f"young {count(c.young)}",
-            f"mature {count(c.mature)}",
-            f"<b>{percent(deck_list.mature_share(c))}</b> mature" if c.total else DASH,
-        ]
-    )
-    maturity = (
-        f'<div class="ad-ov-mat"{deck_list.maturity_tip(c)}>{deck_list.maturity_bar(c)}'
-        f'<div class="ad-ov-legend">{legend}</div></div>'
-    )
-
-    done = [f"<b>{c.done}</b> cards"]
-    if c.reps:
-        done += [duration(c.secs), f"{c.secs / c.reps:.1f} s/card"]
-    today = SEP.join(
-        [
-            f"<span{tip('Reviewed today', f'Answers {c.reps}')}>today {done[0]}</span>",
-            *done[1:],
-            f"<span{tip('Reviews that become due tomorrow')}>{c.tomorrow} due tomorrow</span>",
+            left,
+            f"<span{deck_list.maturity_tip(c)}>{mature} mature</span>",
+            f"<span{tip('Reviews that become due tomorrow')}>{count(c.tomorrow)} tmrw</span>",
         ]
     )
     return (
-        f'<div class="ad-ov"><div class="ad-cnts">{counts}</div>{go}{maturity}'
-        f'<div class="ad-ov-today">{today}</div></div>'
+        f'<div class="ad-ov"><div class="ad-cnts">{counts}</div>{study}'
+        f'<div class="ad-ov-line">{line}</div></div>'
     )
 
 

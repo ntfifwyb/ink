@@ -25,7 +25,7 @@ Under the decks, two lines sum up today: cards, time, seconds per card, time lef
 
 **Heatmap.** A calendar year of reviews, weeks starting on Monday, shaded from dim to white by your own quartiles. Hover a day for its date, cards and time; the arrows switch years. Underneath: average cards per study day, share of days studied, longest and current streak.
 
-**Deck overview.** The deck's Due, New and Learn counts (subdecks included, same tooltips as the deck list), a white Study Now button with the time left today, the maturity bar with its new / young / mature counts, and a today line: cards, time, seconds per card and reviews due tomorrow.
+**Deck overview.** The deck's due, new and learn counts (subdecks included, same tooltips as the deck list), a plain Study button, and one line: time left today, percent mature and reviews due tomorrow. Hover the line for the cards done today and the maturity breakdown.
 
 **Reviewer.** A 2px bar along the top for today's queue in the deck, and a session line in the corner: cards, time, seconds per card and time left. The answer bar is flat with the intervals inside the buttons; Edit and More are hidden by default. Your cards keep their own styling.
 
@@ -35,7 +35,7 @@ The top toolbar, menu bar and bottom bar take the same background, and so does A
 
 ## Install
 
-Download `anki-dashboard.ankiaddon` from the [latest release](https://github.com/montinaops/anki-dashboard/releases) and open it with Anki (or Tools > Add-ons > Install from file). Then turn off the four add-ons it replaces.
+Download `anki-dashboard.ankiaddon` from the [latest release](https://github.com/montinaops/anki-dashboard/releases) and open it with Anki (or Tools > Add-ons > Install from file). Anki turns off the four add-ons it replaces on install; you can turn them back on in the add-ons list.
 
 ## Configuration
 

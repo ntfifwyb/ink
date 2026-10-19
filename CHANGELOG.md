@@ -4,6 +4,12 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-20
+
+### Changed
+- The deck overview is pared down: smaller counts, a plain-text Study button in place of the white Study Now button, and one line with time left, percent mature and reviews due tomorrow. The maturity bar and the today line are gone; cards done today and the maturity breakdown are in the line's tooltips.
+- Installing the add-on turns off the four add-ons it replaces (Review Heatmap, More Decks Stats and Time Left, Study Time Stats, and 877182321), which Anki does for add-ons a manifest declares as conflicts.
+
 ## [0.5.0] - 2026-10-19
 
 ### Added
