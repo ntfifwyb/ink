@@ -24,3 +24,10 @@ a { color: inherit; text-decoration: none; }
 #ad-tip b { color: var(--ad-fg1); font-weight: 600; }
 #ad-tip[hidden] { display: none; }
 [data-tip] { cursor: default; }
+
+/* Maturity bar: new, young and mature cards */
+.ad-bar { flex: 1; min-width: 24px; height: 6px; border-radius: 3px; overflow: hidden; display: flex; background: var(--ad-empty); }
+.ad-bar i { display: block; height: 100%; }
+.ad-bar .ad-new { background: var(--ad-fg4); }
+.ad-bar .ad-young { background: var(--ad-accent3); }
+.ad-bar .ad-mature { background: var(--ad-accent); }

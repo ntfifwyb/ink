@@ -4,8 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-19
+
 ### Added
-- The top toolbar, menu bar and the deck list's bottom bar now use the add-on's background, so the black no longer stops at Anki's gray bars.
+- Deck overview: Due, New and Learn counts with the deck list's tooltips (and buried cards), a restyled Study Now button with the time left today, the maturity bar with new / young / mature counts, and a today line with cards, time, seconds per card and reviews due tomorrow.
+- The top toolbar, menu bar and the deck list and overview bottom bars now use the add-on's background, so the black no longer stops at Anki's gray bars. Anki's "finished this deck" page matches too.
 
 ## [0.2.0] - 2026-10-19
 

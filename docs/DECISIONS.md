@@ -38,3 +38,9 @@ Declaring them in `manifest.json` would make Anki disable them on install. For n
 
 ## 2026-10-19: Recolor Anki's toolbar, menu bar and bottom bars
 The page's black stopped at Anki's gray top toolbar and bottom bar. The user asked to bring them to the add-on's background if the add-on can, rather than switching the pages to gray. The add-on redefines Anki's theme variables in those webviews and gives the menu bar a Qt stylesheet; the reviewer's bars are left alone until the reviewer is themed.
+
+## 2026-10-19: Deck overview layout (decided by Claude, pending review)
+- **Counts in the deck list's order and words** (Due, New, Learn) rather than Anki's New, Learning, To Review, so both screens read the same. They include subdecks and are the counts after daily limits that the reviewer will show; buried cards appear in the tooltip.
+- **Study Now is a solid white button**, the one filled element on the page, with time left under it. Time left uses today's seconds per card in this deck, or the collection's last 30 days before the first review.
+- **The today line is for this deck** (with subdecks): cards, time, seconds per card and reviews due tomorrow. The collection-wide strip and the heatmap stay on the deck list.
+- **The congratulations page is recolored too.** Anki shows it in place of the overview when a deck is finished; left alone it was gray inside the black bars.
