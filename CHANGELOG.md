@@ -3,3 +3,11 @@
 All notable changes to this add-on are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+## [0.1.0] - 2026-10-19
+
+### Added
+- Deck list: a compact table with Due, New, Learn, Done, Tmrw and Maturity columns. Hover a number for its breakdown (learning now, later today and other day; all due ignoring limits; answers and time; new, young and mature counts with notes). Columns that are empty for every deck hide themselves.
+- The options group and gear appear when you hover a deck row. Collapsing, drag and drop, options and shift-click selection work as in Anki.
+- Today strip under the decks: cards, time, seconds per card, time left and streak; then all-time and this week's study time, 30-day retention (with the FSRS desired retention in the tooltip when FSRS is on) and the average per study day.
+- Monochrome theme with white as the only accent. Every color and the column set can be changed in the add-on config.

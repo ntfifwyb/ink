@@ -1,1 +1,22 @@
-{}
+{
+  "colors": {
+    "bg": "#0d0d0e",
+    "surface": "#151516",
+    "raised": "#1c1c1e",
+    "line": "#29292b",
+    "fg1": "#ececec",
+    "fg2": "#a3a3a6",
+    "fg3": "#6e6e72",
+    "fg4": "#46464a",
+    "accent": "#f5f5f5",
+    "accent2": "#b0b0b3",
+    "accent3": "#727275",
+    "accent4": "#3b3b3e",
+    "empty": "#1e1e20"
+  },
+  "deck_list": {
+    "columns": ["due", "new", "learn", "done", "tmrw", "maturity"],
+    "hide_empty_columns": true,
+    "today_strip": true
+  }
+}

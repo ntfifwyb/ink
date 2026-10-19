@@ -19,6 +19,8 @@ class BuildTest(unittest.TestCase):
         self.assertIn("manifest.json", names)
         self.assertIn("config.json", names)
         self.assertFalse([n for n in names if "__pycache__" in n or n.endswith(".pyc")])
+        self.assertIn("web/deck_list.css", names)
+        self.assertNotIn("meta.json", names)
 
     def test_build_is_reproducible(self):
         first = build.build().read_bytes()
