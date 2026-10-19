@@ -44,3 +44,12 @@ The page's black stopped at Anki's gray top toolbar and bottom bar. The user ask
 - **Study Now is a solid white button**, the one filled element on the page, with time left under it. Time left uses today's seconds per card in this deck, or the collection's last 30 days before the first review.
 - **The today line is for this deck** (with subdecks): cards, time, seconds per card and reviews due tomorrow. The collection-wide strip and the heatmap stay on the deck list.
 - **The congratulations page is recolored too.** Anki shows it in place of the overview when a deck is finished; left alone it was gray inside the black bars.
+
+## 2026-10-19: Reviewer layout (decided by Claude, pending review)
+- **Today's queue** is the cards answered today in the deck (subdecks included, and cards it lent to filtered decks) against those plus the cards left after daily limits. A card answered Again counts as done and is still among those left, so the bar only reaches the end when the queue is empty.
+- **The session** starts when the reviewer opens and counts every answer since. Time is Anki's per-answer time (capped by the deck's maximum answer seconds), not wall-clock time, matching the deck list and overview. Time left uses this session's pace, or the collection's last 30 days before the first answer.
+- **Session stats stay in the top right corner**, as in the approved mockup, inside the 20px top margin Anki gives every card so they don't cover card text.
+- **Edit and More are hidden by default** (the mockup's unchecked box); `reviewer.edit_more` shows them. Their shortcuts work either way, and with them hidden so is Anki's answer timer that sits inside More.
+- **Night-mode page color only.** The card page and bottom bar take `bg` by redefining Anki's `--canvas`, which the default card background uses; notes that set their own background keep it. In light mode the card stays as Anki draws it, while the bottom bar is still `bg`.
+- **Labels inside buttons.** The interval (and Show Answer's remaining counts) move inside their buttons, so the bar keeps one height between question and answer.
+

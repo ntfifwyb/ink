@@ -4,6 +4,15 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-19
+
+### Added
+- Reviewer: a 2px bar along the top showing how much of today's queue for the deck is done (hover it for the counts), and a session line in the top right corner with cards, time, seconds per card and time left. Both can be turned off in the config (`reviewer.progress_bar`, `reviewer.session_stats`).
+- A quieter answer bar: flat buttons with the interval inside, Good outlined in white, and Show Answer with the remaining counts inside. Edit and More are hidden unless `reviewer.edit_more` is on; E and M still work.
+
+### Changed
+- In night mode the reviewer page and its bottom bar use the add-on's background. Card content keeps your note styling, and a note that sets its own background keeps it.
+
 ## [0.3.0] - 2026-10-19
 
 ### Added

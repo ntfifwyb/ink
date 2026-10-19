@@ -1,0 +1,18 @@
+/* anki-dashboard: the pieces every page with the add-on's HTML uses, the reviewer
+   included: dim zeros, separators and the tooltip that dashboard.js positions. */
+
+.ad-zero { color: var(--ad-fg4); }
+.ad-sep { color: var(--ad-fg4); padding: 0 6px; }
+
+/* Tooltip, positioned by dashboard.js */
+#ad-tip {
+  position: fixed; z-index: 50; pointer-events: none; max-width: 260px;
+  background: var(--ad-raised); border: 1px solid var(--ad-line); border-radius: 6px;
+  padding: 8px 12px; font-size: 12px; color: var(--ad-fg2); white-space: pre-line;
+  left: 0; top: 0; width: max-content; text-align: left; line-height: 1.45;
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .5);
+}
+#ad-tip b { color: var(--ad-fg1); font-weight: 600; }
+#ad-tip[hidden] { display: none; }
+[data-tip] { cursor: default; }
