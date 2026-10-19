@@ -5,7 +5,8 @@
    only repeat the x axis are desaturated as a whole. */
 
 html, body { overflow-x: hidden; }
-html { color-scheme: dark; } /* native radios and checkboxes, in light mode too */
+/* native radios and checkboxes; :not(#_) outranks the :root { color-scheme: light } of Anki's light theme */
+:root:not(#_) { color-scheme: dark; }
 body {
   --canvas: var(--ad-bg);
   --canvas-elevated: var(--ad-surface);
