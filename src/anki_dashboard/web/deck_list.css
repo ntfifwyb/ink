@@ -66,6 +66,28 @@ tr.ad-row:hover .ad-opt { display: flex; }
 .ad-l1 b { color: var(--ad-accent); font-weight: 600; }
 .ad-l2 { color: var(--ad-fg3); font-size: 12px; }
 
+/* Heatmap: the SVG has only a viewBox, so it takes the column's width. */
+.ad-heat { display: grid; gap: 8px; padding: 0 8px; }
+.ad-heat-head { display: flex; justify-content: space-between; align-items: baseline; color: var(--ad-fg3); font-size: 12px; }
+.ad-yrs { display: flex; gap: 8px; align-items: center; }
+.ad-yr { padding: 0 4px; color: var(--ad-fg3); }
+.ad-yr:hover { color: var(--ad-fg1); }
+.ad-yr.ad-off { visibility: hidden; }
+.ad-legend { display: inline-flex; gap: 3px; align-items: center; }
+.ad-legend i { width: 10px; height: 10px; border-radius: 2px; }
+.ad-heat-svg { display: block; width: 100%; height: auto; }
+.ad-heat-svg text { font-size: 9px; fill: var(--ad-fg3); }
+.ad-heat-svg rect { rx: 2px; }
+.ad-heat-svg rect:hover { stroke: var(--ad-fg2); stroke-width: 1px; }
+.ad-h0 { fill: var(--ad-empty); background: var(--ad-empty); }
+.ad-h1 { fill: var(--ad-accent4); background: var(--ad-accent4); }
+.ad-h2 { fill: var(--ad-accent3); background: var(--ad-accent3); }
+.ad-h3 { fill: var(--ad-accent2); background: var(--ad-accent2); }
+.ad-h4 { fill: var(--ad-accent); background: var(--ad-accent); }
+.ad-f { fill: none; stroke: var(--ad-line); stroke-width: 1px; }
+.ad-heat-stats { color: var(--ad-fg3); font-size: 12px; }
+.ad-heat-stats b { color: var(--ad-fg1); font-weight: 600; }
+
 @media (max-width: 640px) {
   body > center { padding-left: 8px; padding-right: 8px; }
   col.ad-c-due, col.ad-c-new, col.ad-c-learn, col.ad-c-done, col.ad-c-tmrw { width: 2.8em; }
