@@ -22,4 +22,9 @@ body.nightMode { --canvas: var(--ad-bg); }
 .ad-sess b { color: var(--ad-fg2); font-weight: 500; }
 .ad-sess .ad-sep { padding: 0 4px; }
 
+/* Light mode keeps the card light, so the bar and the count turn dark gray */
+body:not(.nightMode) .ad-prog { background: rgba(0, 0, 0, .08); }
+body:not(.nightMode) .ad-prog i { background: var(--ad-fg4); }
+body:not(.nightMode) .ad-sess b { color: var(--ad-fg4); }
+
 @media (prefers-reduced-motion: reduce) { .ad-prog i { transition: none; } }

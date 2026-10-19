@@ -72,3 +72,6 @@ The user chose to have Anki turn off the four replaced add-ons (1771074083, 1556
 
 ## 2026-10-20: Minimal deck overview
 The user found the solid white Study Now button "too AI-slopish" and not minimal, and asked for the page to be overhauled. Chosen from two options each: the counts plus one line (time left, percent mature, reviews due tomorrow), dropping the maturity bar and the today line, rather than counts and button alone; a plain-text Study button, underlined on hover, rather than an outlined one; counts at 24px rather than 32px. Labels are lowercase without letter spacing, and today's cards, time and pace moved into the time-left tooltip.
+
+## 2026-10-20: Light-mode reviewer
+The user chose to keep the reviewer's card light in Anki's light mode, as the note and Anki draw it, rather than treating the card page as night mode. The progress bar and the session count turn `fg4` there so they show on white; the answer bar stays `bg`.

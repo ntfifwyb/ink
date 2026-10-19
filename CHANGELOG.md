@@ -4,6 +4,13 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.6.4] - 2026-10-20
+
+### Fixed
+- Light mode: the stats page's unchecked radio buttons are dark like the rest of the page instead of white circles.
+- Light mode: the congratulations page's text is light on the dark page instead of black.
+- Light mode: in the reviewer, the progress bar and the session card count are dark gray, so they show on a light card.
+
 ## [0.6.3] - 2026-10-20
 
 ### Fixed
