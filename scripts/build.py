@@ -2,8 +2,10 @@
 """Zip src/anki_dashboard into dist/anki-dashboard.ankiaddon.
 
 Anki expects the add-on's files at the root of the archive, without the package
-folder or bytecode. Entries are sorted and timestamped at a fixed date so the same
-sources always produce the same archive.
+folder or bytecode. meta.json is left out: Anki writes the user's settings there when
+the package folder is used as an installed add-on during development. Entries are
+sorted and timestamped at a fixed date so the same sources always produce the same
+archive.
 """
 
 import sys
@@ -20,7 +22,10 @@ def files() -> list[Path]:
     return sorted(
         p
         for p in SRC.rglob("*")
-        if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"
+        if p.is_file()
+        and "__pycache__" not in p.parts
+        and p.suffix != ".pyc"
+        and p.relative_to(SRC).as_posix() != "meta.json"
     )
 
 

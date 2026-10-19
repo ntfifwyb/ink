@@ -1,0 +1,76 @@
+/* Deck list: Anki wraps the page in <center>; the table and the stats below it are
+   restyled here to one 760px column that shrinks with the window. Selectors on the
+   table use :has(tr.ad-head) to outrank Anki's own deckbrowser.css (.fancy table). */
+
+body { margin: 0; }
+body > center { display: block; text-align: start; padding: 24px 16px 32px; }
+table:has(tr.ad-head), table:has(tr.ad-head):hover {
+  width: 100%; max-width: 760px; margin: 0 auto; padding: 0; table-layout: fixed;
+  border: 0; border-radius: 0; box-shadow: none; background: none;
+  border-collapse: separate; border-spacing: 0;
+}
+body > center > br { display: none; }
+
+col.ad-c-due, col.ad-c-new, col.ad-c-done, col.ad-c-tmrw { width: 3.6em; }
+col.ad-c-learn { width: 3.8em; }
+col.ad-c-maturity { width: 9.5em; }
+
+tr.ad-head th {
+  color: var(--ad-fg3); font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .07em; text-align: end; padding: 0 8px 8px;
+  border-bottom: 1px solid var(--ad-line); white-space: nowrap;
+}
+tr.ad-head th:first-child, tr.ad-head th.ad-c-maturity { text-align: start; }
+tr.top-level-drag-row td { height: 4px; padding: 0; }
+
+tr.deck.ad-row td {
+  padding: 6px 8px; vertical-align: middle; border: 0; background: none; white-space: nowrap;
+}
+tr.deck.ad-row td:first-child { border-radius: 6px 0 0 6px; }
+tr.deck.ad-row td:last-child { border-radius: 0 6px 6px 0; }
+tr.deck.ad-row:hover td { background: var(--ad-surface); }
+tr.ad-row.current .ad-deck { color: var(--ad-accent); font-weight: 600; }
+tr.deck.ad-row.drag-hover td { background: var(--ad-raised); }
+
+td.ad-n { text-align: end; color: var(--ad-fg2); }
+td.ad-n.ad-hi { color: var(--ad-accent); }
+
+.ad-name-in { position: relative; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ad-tw { width: 12px; flex: none; text-align: center; color: var(--ad-fg3); font-size: 10px; }
+.ad-tw:hover { color: var(--ad-fg1); }
+.ad-deck { color: var(--ad-fg1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.ad-deck.ad-filtered { color: var(--ad-fg2); font-style: italic; }
+/* Options group and gear: shown on row hover, over the end of the name so the
+   hidden label takes no width. */
+.ad-opt {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  display: none; align-items: center; gap: 4px; padding-left: 16px;
+  background: linear-gradient(to right, transparent, var(--ad-surface) 12px);
+  color: var(--ad-fg3); font-size: 12px; white-space: nowrap;
+}
+tr.ad-row:hover .ad-opt { display: flex; }
+.ad-opt:hover { color: var(--ad-fg1); }
+.ad-opt svg { width: 13px; height: 13px; fill: currentColor; }
+
+.ad-mat-in { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ad-bar { flex: 1; min-width: 24px; height: 6px; border-radius: 3px; overflow: hidden; display: flex; background: var(--ad-empty); }
+.ad-bar i { display: block; height: 100%; }
+.ad-bar .ad-new { background: var(--ad-fg4); }
+.ad-bar .ad-young { background: var(--ad-accent3); }
+.ad-bar .ad-mature { background: var(--ad-accent); }
+.ad-pct { width: 3.2em; flex: none; text-align: end; color: var(--ad-fg2); font-size: 12px; }
+
+.ad-root { max-width: 760px; margin: 24px auto 0; display: grid; gap: 24px; }
+.ad-today { display: grid; gap: 4px; padding: 12px 8px 0; border-top: 1px solid var(--ad-line); }
+.ad-l1 { color: var(--ad-fg1); }
+.ad-l1 b { color: var(--ad-accent); font-weight: 600; }
+.ad-l2 { color: var(--ad-fg3); font-size: 12px; }
+
+@media (max-width: 640px) {
+  body > center { padding-left: 8px; padding-right: 8px; }
+  col.ad-c-due, col.ad-c-new, col.ad-c-learn, col.ad-c-done, col.ad-c-tmrw { width: 2.8em; }
+  col.ad-c-maturity { width: 4.5em; }
+  tr.ad-head th { padding-left: 4px; padding-right: 4px; letter-spacing: 0; }
+  tr.deck.ad-row td { padding-left: 4px; padding-right: 4px; }
+  .ad-pct { display: none; }
+}
