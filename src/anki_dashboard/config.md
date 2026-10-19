@@ -4,5 +4,6 @@
 - `columns`: which columns the deck list shows, in order. Any of `due`, `new`, `learn`, `done`, `tmrw`, `maturity`.
 - `hide_empty_columns`: hide a column when every deck shows 0 in it (`maturity` is always shown).
 - `today_strip`: show the two-line summary of today's study under the decks.
+- `heatmap`: show the review heatmap for a calendar year, with the average, share of days studied and streaks underneath. The arrows switch years.
 
 Hover any number in the deck list for its breakdown.

@@ -4,6 +4,13 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-19
+
+### Added
+- Review heatmap under the today strip: one calendar year with weeks starting on Monday, scaled to the window width so it never scrolls sideways. Hover a day for its date, cards and study time. The arrows switch to earlier years with reviews.
+- One stats line under the heatmap: average cards per study day, share of days studied, longest and current streak.
+- The heatmap shades scale to your own history (quartiles of your study days), and `deck_list.heatmap` turns it off.
+
 ## [0.1.0] - 2026-10-19
 
 ### Added

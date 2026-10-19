@@ -30,3 +30,8 @@ Declaring them in `manifest.json` would make Anki disable them on install. For n
 - **Retention** is the share of review-card answers in the last 30 days that were not Again.
 - **Days studied** is a share of the days from the first review through today.
 - **Maturity** counts every card in the deck, including suspended and buried ones; mature means an interval of 21 days or more.
+
+## 2026-10-19: Heatmap layout and shading (decided by Claude, pending review)
+- **Calendar year with arrows**, as in the approved mockup, rather than a rolling 12 months. The arrows reach back to the year of the first review; Anki re-renders the deck list for the chosen year, so only one year is ever in the page.
+- **Shades are the quartiles of your own study days** over the whole history, so the ramp fits any volume and years compare on one scale. A single study day shows white.
+- **The stats line covers the whole history**, not just the year shown, matching the streak and average in the today strip.

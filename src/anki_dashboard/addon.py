@@ -8,6 +8,8 @@ from aqt.webview import WebContent
 
 from . import config, deck_list
 
+_heat_year: int | None = None  # heatmap year picked with the arrows; None is this year
+
 
 def _config() -> config.Config:
     return config.load(mw.addonManager.getConfig(__name__))
@@ -25,7 +27,19 @@ def on_webview_will_set_content(content: WebContent, context: object | None) -> 
 
 
 def on_deck_browser_will_render_content(browser: DeckBrowser, content: DeckBrowserContent) -> None:
-    content.tree, content.stats = deck_list.build(mw.col, browser._render_data.tree, _config())
+    content.tree, content.stats = deck_list.build(
+        mw.col, browser._render_data.tree, _config(), _heat_year
+    )
+
+
+def on_js_message(handled: tuple[bool, object], message: str, context: object) -> tuple:
+    global _heat_year
+    if isinstance(context, DeckBrowser) and message.startswith("ad-year:"):
+        year = message.split(":", 1)[1]
+        _heat_year = int(year) if year.isdigit() else None
+        context.refresh()
+        return True, None
+    return handled
 
 
 def on_config_updated(_raw: dict) -> None:
@@ -38,3 +52,4 @@ def init() -> None:
     mw.addonManager.setConfigUpdatedAction(__name__, on_config_updated)
     gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
     gui_hooks.deck_browser_will_render_content.append(on_deck_browser_will_render_content)
+    gui_hooks.webview_did_receive_js_message.append(on_js_message)

@@ -1,4 +1,5 @@
-"""The deck list: a compact deck table and a two-line summary of today's study.
+"""The deck list: a compact deck table, a two-line summary of today's study and the
+review heatmap.
 
 `build` reads the collection and returns the HTML that replaces the deck browser's
 tree and stats sections. The table keeps Anki's row ids and `deck` class, so drag
@@ -9,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from . import queries, stats
+from . import heatmap, queries, stats
 from .config import Config
 from .fmt import DASH, SEP, count, duration, esc, percent, tip
 from .stats import DeckCounts
@@ -255,8 +256,7 @@ def _stats_tree(node) -> stats.TreeNode:
     return stats.TreeNode(node.deck_id, [_stats_tree(c) for c in node.children])
 
 
-def today_summary(col, tree, clock: queries.DayClock) -> Today:
-    days = queries.day_reviews(col, clock)
+def today_summary(col, tree, clock: queries.DayClock, days: dict[int, tuple[int, float]]) -> Today:
     reps, secs = days.get(0, (0, 0.0))
     study_days = {d for d, (n, _) in days.items() if n}
     day_secs = {d: s for d, (_, s) in days.items()}
@@ -277,12 +277,20 @@ def today_summary(col, tree, clock: queries.DayClock) -> Today:
     )
 
 
-def build(col, tree, cfg: Config) -> tuple[str, str]:
-    """HTML for the deck browser's tree and stats sections."""
+def build(col, tree, cfg: Config, year: int | None = None) -> tuple[str, str]:
+    """HTML for the deck browser's tree and stats sections. `year` is the heatmap's
+    year, this year when None or out of range."""
     clock = queries.DayClock.of(col)
     rolled = stats.rollup([_stats_tree(c) for c in tree.children], queries.deck_counts(col, clock))
     rows = rows_from_tree(col, tree, rolled, col.decks.get_current_id())
     dl = cfg.deck_list
     table = render_table(rows, visible_columns(rows, dl.columns, dl.hide_empty_columns))
-    today = render_today(today_summary(col, tree, clock)) if dl.today_strip else ""
-    return table, f'<div class="ad-root">{today}</div>'
+    days = queries.day_reviews(col, clock)
+    today = render_today(today_summary(col, tree, clock, days)) if dl.today_strip else ""
+    heat = ""
+    if dl.heatmap:
+        h = heatmap.Heatmap(clock.date.year, clock.date, days)
+        first, last = h.years
+        h.year = min(max(year or last, first), last)
+        heat = heatmap.render(h)
+    return table, f'<div class="ad-root">{today}{heat}</div>'

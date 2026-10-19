@@ -156,7 +156,11 @@ class ConfigTest(unittest.TestCase):
         cfg = config.load(
             {
                 "colors": {"bg": "red;}</style>", "fg1": "#fff", "nope": "#000"},
-                "deck_list": {"columns": ["done", "x", "done"], "today_strip": "yes"},
+                "deck_list": {
+                    "columns": ["done", "x", "done"],
+                    "today_strip": "yes",
+                    "heatmap": False,
+                },
             }
         )
         self.assertEqual(cfg.colors["bg"], config.COLORS["bg"])
@@ -164,6 +168,7 @@ class ConfigTest(unittest.TestCase):
         self.assertNotIn("nope", cfg.colors)
         self.assertEqual(cfg.deck_list.columns, ["done"])
         self.assertTrue(cfg.deck_list.today_strip)
+        self.assertFalse(cfg.deck_list.heatmap)
 
     def test_not_a_dict(self):
         self.assertEqual(config.load(None), config.Config())
@@ -203,6 +208,7 @@ class BuildTest(unittest.TestCase):
         self.assertNotIn(f'id="{child}"', table)
         self.assertIn("5 cards, 5 notes", html.unescape(table))
         self.assertIn('class="ad-today"', stats_html)
+        self.assertIn('class="ad-heat"', stats_html)
 
 
 if __name__ == "__main__":

@@ -17,6 +17,7 @@
   "deck_list": {
     "columns": ["due", "new", "learn", "done", "tmrw", "maturity"],
     "hide_empty_columns": true,
-    "today_strip": true
+    "today_strip": true,
+    "heatmap": true
   }
 }

@@ -33,6 +33,7 @@ class DeckListConfig:
     columns: list[str] = field(default_factory=lambda: list(DECK_COLUMNS))
     hide_empty_columns: bool = True
     today_strip: bool = True
+    heatmap: bool = True
 
 
 @dataclass
@@ -56,7 +57,7 @@ def load(raw: Any) -> Config:
         cols = deck.get("columns")
         if isinstance(cols, list):
             cfg.deck_list.columns = [c for c in dict.fromkeys(cols) if c in DECK_COLUMNS]
-        for key in ("hide_empty_columns", "today_strip"):
+        for key in ("hide_empty_columns", "today_strip", "heatmap"):
             if isinstance(deck.get(key), bool):
                 setattr(cfg.deck_list, key, deck[key])
     return cfg
