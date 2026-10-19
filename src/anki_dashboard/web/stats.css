@@ -160,7 +160,16 @@ body {
   #ad-scope span { color: var(--ad-fg3); font-size: 12px; }
   /* Anki sizes the grid as 100vw - 3em from a 1em left margin; without a scrollbar
      that leaves 2em on the right */
-  .graphs-container:not(#_), #ad-sum { width: auto; margin-left: 1em; margin-right: 1em; }
+  .graphs-container:not(#_), #ad-sum { width: auto; margin-left: 16px; margin-right: 16px; }
   #ad-sum + .graphs-container:not(#_) { margin-top: 0; }
-  .graphs-container > .container:not(#_), #ad-study { margin-bottom: 1em; break-inside: avoid; }
+  /* The gap above each card is padding, as a page break drops a margin: the card
+     itself is drawn by ::before below it, so a card starting a page sits as far
+     from the top as from the card above */
+  .graphs-container > .container:not(#_), #ad-study {
+    position: relative; margin-bottom: 0; padding-top: 32px; border: 0; background: none; break-inside: avoid;
+  }
+  .graphs-container > .container:not(#_)::before, #ad-study::before {
+    content: ""; position: absolute; inset: 16px 0 0; z-index: -1;
+    background: var(--ad-surface); border: 1px solid var(--ad-line); border-radius: 8px;
+  }
 }
