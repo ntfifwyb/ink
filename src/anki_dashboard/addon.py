@@ -139,6 +139,9 @@ def on_config_updated(_raw: dict) -> None:
     elif mw.state == "overview":
         mw.overview.refresh()
     elif mw.state == "review" and mw.reviewer.card:
+        # the redrawn toolbar lost the flat look and card background Anki gives it in review
+        mw.toolbarWeb.on_body_classes_need_update()
+        mw.toolbarWeb.update_background_image()
         update_reviewer()
         mw.reviewer.bottom.web.eval(_edit_more_js(_config().reviewer.edit_more))
 
