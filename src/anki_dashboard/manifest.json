@@ -1,7 +1,13 @@
 {
   "package": "anki_dashboard",
   "name": "Anki Dashboard",
-  "human_version": "0.5.0",
+  "human_version": "0.6.0",
   "homepage": "https://github.com/montinaops/anki-dashboard",
-  "min_point_version": 231000
+  "min_point_version": 231000,
+  "conflicts": [
+    "1771074083",
+    "1556734708",
+    "1247171202",
+    "877182321"
+  ]
 }

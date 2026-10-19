@@ -38,13 +38,12 @@ def text(fragment):
 
 
 class RenderTest(unittest.TestCase):
-    def test_counts_button_maturity_and_today(self):
+    def test_counts_button_and_one_line(self):
         out = overview.render(deck(counts=DeckCounts(**{**deck().counts.__dict__, "tomorrow": 23})))
         self.assertEqual(
             text(out),
-            "21 Due 20 New 3 Learn Study Now ~7 min left "  # 44 cards at 9.0 s is 6.6 min
-            "new 90 · young 51 · mature 19 · 12% mature "
-            "today 25 cards · 6.0 min · 9.0 s/card · 23 due tomorrow",
+            "21 due 20 new 3 learn Study "
+            "~7 min left · 12% mature · 23 tmrw",  # 44 cards at 9.0 s is 6.6 min
         )
         self.assertIn("pycmd('study')", out)
         self.assertIn("id=study", out)
@@ -55,11 +54,12 @@ class RenderTest(unittest.TestCase):
         self.assertIn("Unseen in deck 90\nBuried 2", out)
         self.assertIn("44 cards at 9.0 s/card", out)
         self.assertIn("160 notes", out)
+        self.assertIn("Done today 25 cards in 6.0 min, 9.0 s/card", out)
 
     def test_time_left_uses_recent_pace_before_first_review(self):
         out = overview.render(deck(counts=DeckCounts(unseen=5)))
         self.assertIn("~10 min left", text(out))  # 44 cards at 13.4 s
-        self.assertIn("today 0 cards · 0 due tomorrow", text(out))
+        self.assertIn("Done today 0 cards", html.unescape(html.unescape(out)))
 
     def test_no_history_and_empty_deck(self):
         out = text(
@@ -69,8 +69,7 @@ class RenderTest(unittest.TestCase):
         )
         self.assertEqual(
             out,
-            "– Due – New – Learn Study Now – new – · young – · mature – · – "
-            "today 0 cards · 0 due tomorrow",
+            "– due – new – learn Study – left · – mature · – tmrw",
         )
 
 
@@ -96,8 +95,8 @@ class BuildTest(unittest.TestCase):
         finally:
             col.close()
             shutil.rmtree(tmp)
-        self.assertTrue(text(out).startswith("– Due 5 New – Learn Study Now"))
-        self.assertIn("new 5 · young –", text(out))
+        self.assertTrue(text(out).startswith("– due 5 new – learn Study"))
+        self.assertIn("0% mature", text(out))
 
 
 if __name__ == "__main__":
