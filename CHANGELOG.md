@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.6.5] - 2026-10-20
+
+### Fixed
+- Saving the add-on's config during a review no longer turns the top toolbar into the dark deck-list bar. It keeps the card's background, as it does in every review.
+
 ## [0.6.4] - 2026-10-20
 
 ### Fixed
