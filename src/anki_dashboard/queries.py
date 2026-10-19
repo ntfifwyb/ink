@@ -92,24 +92,35 @@ def deck_counts(col, clock: DayClock) -> dict[int, DeckCounts]:
     return out
 
 
-def day_reviews(col, clock: DayClock) -> dict[int, tuple[int, float]]:
-    """Answers and seconds per day over the whole history, keyed by day offset."""
+def search_filter(col, search: str) -> str:
+    """An `and cid in (...)` clause for revlog limiting it to the cards a search finds.
+    No search keeps the whole history, including cards since deleted."""
+    if not search.strip():
+        return ""
+    ids = ",".join(str(int(c)) for c in col.find_cards(search))
+    return f" and cid in ({ids or 0})"
+
+
+def day_reviews(col, clock: DayClock, cards: str = "") -> dict[int, tuple[int, float]]:
+    """Answers and seconds per day over the whole history, keyed by day offset.
+    `cards` is a `search_filter` clause."""
     return {
         -days_ago: (reps, (ms or 0) / 1000)
         for days_ago, reps, ms in col.db.all(
             f"""
             select {clock.days_ago_sql()} as d, count(*), sum(time)
-            from revlog where ease > 0 and id < ? group by d
+            from revlog where ease > 0 and id < ?{cards} group by d
             """,
             clock.cutoff * 1000,
         )
     }
 
 
-def retention(col, clock: DayClock, days: int = 30) -> float | None:
-    """Share of review-card answers in the last `days` days that were not Again."""
+def retention(col, clock: DayClock, days: int = 30, cards: str = "") -> float | None:
+    """Share of review-card answers in the last `days` days that were not Again.
+    `cards` is a `search_filter` clause."""
     passed, total = col.db.first(
-        "select sum(ease > 1), count(*) from revlog where type = 1 and id >= ?",
+        f"select sum(ease > 1), count(*) from revlog where type = 1 and id >= ?{cards}",
         clock.start_ms - (days - 1) * DAY * 1000,
     )
     return passed / total if total else None
