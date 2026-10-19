@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-20
+
+### Fixed
+- Save PDF on the stats page: the scope and range bar no longer covers the summary numbers, and the graph cards are spaced apart again instead of touching.
+
 ## [0.6.0] - 2026-10-20
 
 ### Changed

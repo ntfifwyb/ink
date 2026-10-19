@@ -147,3 +147,11 @@ body {
 .ad-st-totals { margin-top: 8px; text-align: center; color: var(--ad-fg3); font-size: 12px; }
 .ad-st-totals b { color: var(--ad-fg1); font-weight: 600; }
 .ad-st-empty { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 120px; color: var(--ad-fg3); }
+
+/* Save PDF prints the page: Anki then lays the cards out as blocks, dropping the grid's
+   gap, and lifts the range bar out of the flow, over the summary header. */
+@media print {
+  .range-box:not(#_) { position: static; }
+  #ad-sum + .graphs-container:not(#_) { margin-top: 0; }
+  .graphs-container > .container:not(#_), #ad-study { margin-bottom: 1em; break-inside: avoid; }
+}
