@@ -169,6 +169,18 @@ class GraphKeysTest(unittest.TestCase):
             shutil.rmtree(d)
 
 
+class ScopeTest(unittest.TestCase):
+    def test_titles(self):
+        self.assertEqual(stats_page.scope_title("", "Default"), "Whole collection")
+        self.assertEqual(stats_page.scope_title("deck:current", "A::B"), "A::B")
+        self.assertEqual(stats_page.scope_title(" tag:x ", "Default"), "tag:x")
+
+    def test_header_escapes_the_search(self):
+        out = stats_page.render_scope("<b>", page({}), date(2026, 10, 20))
+        self.assertTrue(out.startswith("<b>&lt;b&gt;</b>"))
+        self.assertEqual(text(out), "<b> last 12 months \u00b7 Oct 20, 2026")
+
+
 class BuildTest(unittest.TestCase):
     """build() against a real collection, as the bridge handler calls it."""
 
@@ -194,7 +206,21 @@ class BuildTest(unittest.TestCase):
             text(out["summary"]), "100% retention 1 day streak 0.1 min study time 1 cards/study day"
         )
         self.assertIn("ad-st-svg", out["study"])
-        self.assertEqual(stats_page.build(self.col, "deck:(", False), {"summary": "", "study": ""})
+        self.assertEqual(
+            text(out["scope"]), "Whole collection last 12 months \u00b7 " + self.today()
+        )
+        self.assertEqual(
+            stats_page.build(self.col, "deck:(", False), {"scope": "", "summary": "", "study": ""}
+        )
+
+    def test_scope_names_the_current_deck(self):
+        self.col.decks.select(self.col.decks.id("Spanish::Verbs"))
+        out = stats_page.build(self.col, "deck:current", True)
+        self.assertEqual(text(out["scope"]), "Spanish::Verbs all history \u00b7 " + self.today())
+
+    def today(self):
+        d = date.today()
+        return f"{stats_page.MONTHS[d.month - 1]} {d.day}, {d.year}"
 
 
 if __name__ == "__main__":

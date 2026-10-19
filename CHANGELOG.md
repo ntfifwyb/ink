@@ -4,6 +4,14 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-10-20
+
+### Changed
+- Save PDF on the stats page prints a plain header (the deck's name, or the whole collection or the search, then the range and date) in place of the deck/collection and range controls.
+
+### Fixed
+- Save PDF on the stats page: the margins on the left and right are now even.
+
 ## [0.6.1] - 2026-10-20
 
 ### Fixed
