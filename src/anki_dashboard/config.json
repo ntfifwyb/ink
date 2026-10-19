@@ -24,5 +24,10 @@
     "progress_bar": true,
     "session_stats": true,
     "edit_more": false
+  },
+  "stats": {
+    "summary": true,
+    "study_time": true,
+    "hidden_graphs": ["today", "calendar"]
   }
 }

@@ -180,6 +180,19 @@ class ConfigTest(unittest.TestCase):
             config.ReviewerConfig(progress_bar=False, session_stats=True, edit_more=True),
         )
 
+    def test_stats_settings(self):
+        cfg = config.load(
+            {"stats": {"hidden_graphs": ["hours", "nope", "hours", "added"], "summary": "no"}}
+        )
+        self.assertEqual(cfg.stats.hidden_graphs, ["hours", "added"])
+        self.assertTrue(cfg.stats.summary)
+        self.assertEqual(config.load({}).stats.hidden_graphs, ["today", "calendar"])
+
+    def test_stats_window_uses_config_colors(self):
+        qss = config.stats_dialog_qss(dict(config.COLORS, bg="#000000", line="#222222"))
+        self.assertIn("QDialog { background: #000000;", qss)
+        self.assertIn("border: 1px solid #222222;", qss)
+
     def test_not_a_dict(self):
         self.assertEqual(config.load(None), config.Config())
 

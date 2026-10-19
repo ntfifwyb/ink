@@ -11,4 +11,9 @@
 - `session_stats`: cards, time, seconds per card and time left for this session, in the top right corner.
 - `edit_more`: show Anki's Edit and More buttons beside the answer buttons. Hidden by default; E and M still work.
 
+**stats**
+- `summary`: show retention, streak, study time and cards per study day above the graphs.
+- `study_time`: show the Study time card (time per day, week or month, and seconds per card).
+- `hidden_graphs`: built-in graphs to hide. Any of `today`, `future_due`, `calendar`, `reviews`, `card_counts`, `intervals`, `ease`, `difficulty`, `stability`, `retrievability`, `retention`, `hours`, `buttons`, `added`. Graphs a scheduler doesn't show (ease with FSRS, difficulty without) are simply absent.
+
 Hover any number for its breakdown.

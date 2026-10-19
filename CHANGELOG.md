@@ -4,6 +4,17 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-19
+
+### Added
+- Stats page summary: 30-day retention, current streak (longest in the tooltip), study time and cards per study day, in large numbers above the graphs.
+- Study time card (replaces Study Time Stats): time per day (30 days), week (26 weeks) or month (12 months, or every month with all history) as bars, with seconds per card as a line. Hover a bar for its time, cards and pace. Underneath: today, this week, this month and the average per study day.
+- Both follow the page's deck, collection or search, and its last 12 months or all history choice.
+- `stats.hidden_graphs` hides built-in graphs; Today and Calendar are hidden by default. `stats.summary` and `stats.study_time` turn the new sections off.
+
+### Changed
+- The stats window uses the add-on's background and grays. Graphs whose colors mean something (answer buttons, card types, review kinds) map each color to its own gray; the rest are desaturated.
+
 ## [0.4.0] - 2026-10-19
 
 ### Added

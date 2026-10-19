@@ -9,10 +9,12 @@ from aqt import gui_hooks, mw
 from aqt.deckbrowser import DeckBrowser, DeckBrowserBottomBar, DeckBrowserContent
 from aqt.overview import Overview, OverviewBottomBar, OverviewContent
 from aqt.reviewer import Reviewer, ReviewerBottomBar
+from aqt.stats import NewDeckStats
 from aqt.toolbar import TopToolbar
+from aqt.utils import tr
 from aqt.webview import AnkiWebView, WebContent
 
-from . import config, deck_list, overview, reviewer
+from . import config, deck_list, overview, reviewer, stats_page
 
 _heat_year: int | None = None  # heatmap year picked with the arrows; None is this year
 _session_since = 0  # epoch ms when the reviewer last opened
@@ -61,14 +63,40 @@ def on_deck_browser_will_render_content(browser: DeckBrowser, content: DeckBrows
 
 
 def on_style_injected(web: AnkiWebView) -> None:
-    """A finished deck shows Anki's congratulations page in place of the overview. It is a
-    SvelteKit page that skips webview_will_set_content, so its styles are added here."""
-    if web is mw.web and web.page().url().path().endswith("/congrats"):
-        tags = (
-            f'<link rel="stylesheet" href="{_web("congrats.css")}">'
-            f"<style>{config.css_variables(_config().colors)}</style>"
-        )
-        web.eval(f"document.head.insertAdjacentHTML('beforeend', {json.dumps(tags)})")
+    """The congratulations page (shown in place of a finished deck's overview) and the
+    stats page are SvelteKit pages that skip webview_will_set_content, so their styles
+    and scripts are added here, once Anki has styled them."""
+    path = web.page().url().path()
+    if web is mw.web and path.endswith("/congrats"):
+        sheets, scripts = ["congrats.css"], []
+    elif path.endswith("/graphs"):
+        sheets, scripts = ["shared.css", "stats.css"], ["dashboard.js", "stats_page.js"]
+    else:
+        return
+    cfg = _config()
+    tags = "".join(f'<link rel="stylesheet" href="{_web(s)}">' for s in sheets)
+    tags += f"<style>{config.css_variables(cfg.colors)}</style>"
+    settings = {
+        "titles": stats_page.graph_keys(tr),
+        "hidden": cfg.stats.hidden_graphs,
+        "summary": cfg.stats.summary,
+        "studyTime": cfg.stats.study_time,
+    }
+    # scripts added as HTML don't run, so they are created as elements, in order
+    load = "".join(
+        f"s=document.createElement('script');s.src={json.dumps(_web(name))};s.async=false;"
+        "document.head.appendChild(s);"
+        for name in scripts
+    )
+    web.eval(
+        f"window.adStats={json.dumps(settings)};"
+        f"document.head.insertAdjacentHTML('beforeend', {json.dumps(tags)});"
+        f"(function(){{var s;{load}}})();"
+    )
+
+
+def on_stats_dialog_will_show(dialog: NewDeckStats) -> None:
+    dialog.setStyleSheet(config.stats_dialog_qss(_config().colors))
 
 
 def on_overview_will_render_content(_overview: Overview, content: OverviewContent) -> None:
@@ -97,6 +125,9 @@ def on_js_message(handled: tuple[bool, object], message: str, context: object) -
         _heat_year = int(year) if year.isdigit() else None
         context.refresh()
         return True, None
+    if isinstance(context, NewDeckStats) and message.startswith("ad-stats:"):
+        scope = json.loads(message.split(":", 1)[1])
+        return True, stats_page.build(mw.col, str(scope["search"]), bool(scope["all"]))
     return handled
 
 
@@ -123,3 +154,4 @@ def init() -> None:
     gui_hooks.state_will_change.append(on_state_will_change)
     gui_hooks.reviewer_did_show_question.append(update_reviewer)
     gui_hooks.main_window_did_init.append(style_menu_bar)
+    gui_hooks.stats_dialog_will_show.append(on_stats_dialog_will_show)

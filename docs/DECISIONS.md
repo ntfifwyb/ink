@@ -53,3 +53,13 @@ The page's black stopped at Anki's gray top toolbar and bottom bar. The user ask
 - **Night-mode page color only.** The card page and bottom bar take `bg` by redefining Anki's `--canvas`, which the default card background uses; notes that set their own background keep it. In light mode the card stays as Anki draws it, while the bottom bar is still `bg`.
 - **Labels inside buttons.** The interval (and Show Answer's remaining counts) move inside their buttons, so the bar keeps one height between question and answer.
 
+## 2026-10-19: Stats page scope and hidden graphs
+- **The summary and Study time card follow the page**: its deck, collection or search, and its last 12 months or all history choice, so they always agree with the graphs below. Chosen by the user over always counting the whole collection.
+- **Today and Calendar are hidden by default**, since the summary header and the deck-list heatmap already show that data. Chosen by the user; `stats.hidden_graphs` changes the list.
+
+## 2026-10-19: Stats page details (decided by Claude, pending review)
+- **Graphs are matched by their translated titles** (Anki's own `tr` strings), as the page gives its graph cards no ids. A title Anki changes in a later version stops that graph from being hidden or recolored, but never breaks the page.
+- **Gray mapping**: answer buttons Again to Easy go from dimmest to brightest; card counts use the deck list's maturity grays (new `fg4`, young `accent3`, mature `accent`); review kinds run mature brightest to filtered dimmest. Gradients that only repeat the x axis (future due, intervals, added) become one gray, and the rest are desaturated, keeping their light-to-dark order.
+- **Study time card periods**: 30 days, 26 weeks (Monday first) or 12 calendar months; with all history, months reach back to the first review. Day is the default tab and the choice lasts while the window is open.
+- **Retention stays the last 30 days** whatever the range, as on the deck list; study time and cards per study day follow the range; the streak uses the whole history of the matched cards.
+- **The page is always dark**, in light mode too, like the deck list. The stats window can't be narrower than 700px (Anki's minimum), so it was checked at 1680, 900 and 700px.

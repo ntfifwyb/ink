@@ -185,6 +185,29 @@ class DayReviewsTest(CollectionTest):
         self.assertEqual(queries.day_reviews(self.col, self.clock), {0: (2, 2.0), -1: (1, 1.0)})
 
 
+class SearchFilterTest(CollectionTest):
+    def test_search_limits_history_to_matching_cards(self):
+        other = self.col.decks.id("Other")
+        self.add_notes(1)
+        self.add_notes(1, deck=other)
+        ai, oth = self.card_ids()
+        self.add_revlog(0, cid=ai, ms=4000, ease=1)
+        self.add_revlog(1, cid=oth, ms=6000)
+        cards = queries.search_filter(self.col, "deck:AI")
+        self.assertEqual(queries.day_reviews(self.col, self.clock, cards), {0: (1, 4.0)})
+        self.assertEqual(queries.retention(self.col, self.clock, cards=cards), 0.0)
+
+    def test_no_search_keeps_deleted_cards(self):
+        self.add_revlog(3, cid=12345)  # card no longer in the collection
+        self.assertEqual(queries.search_filter(self.col, "  "), "")
+        self.assertEqual(queries.day_reviews(self.col, self.clock, ""), {-3: (1, 8.0)})
+
+    def test_search_with_no_matches(self):
+        self.add_revlog(0)
+        cards = queries.search_filter(self.col, "deck:Nothing")
+        self.assertEqual(queries.day_reviews(self.col, self.clock, cards), {})
+
+
 class SummaryTest(CollectionTest):
     def test_retention_counts_review_answers_only(self):
         for ease in (1, 3, 3, 4):

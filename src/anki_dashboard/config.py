@@ -23,6 +23,23 @@ COLORS = {
     "empty": "#1e1e20",
 }
 DECK_COLUMNS = ("due", "new", "learn", "done", "tmrw", "maturity")
+# Anki's built-in graphs, in page order; the stats page hides those listed in hidden_graphs
+GRAPHS = (
+    "today",
+    "future_due",
+    "calendar",
+    "reviews",
+    "card_counts",
+    "intervals",
+    "ease",
+    "difficulty",
+    "stability",
+    "retrievability",
+    "retention",
+    "hours",
+    "buttons",
+    "added",
+)
 
 # hex, rgb()/hsl() and named colors; nothing that could close the style block
 _COLOR = re.compile(r"^[#a-zA-Z0-9(),.%\s]{1,40}$")
@@ -44,10 +61,18 @@ class ReviewerConfig:
 
 
 @dataclass
+class StatsConfig:
+    summary: bool = True
+    study_time: bool = True
+    hidden_graphs: list[str] = field(default_factory=lambda: ["today", "calendar"])
+
+
+@dataclass
 class Config:
     colors: dict[str, str] = field(default_factory=lambda: dict(COLORS))
     deck_list: DeckListConfig = field(default_factory=DeckListConfig)
     reviewer: ReviewerConfig = field(default_factory=ReviewerConfig)
+    stats: StatsConfig = field(default_factory=StatsConfig)
 
 
 def load(raw: Any) -> Config:
@@ -74,6 +99,15 @@ def load(raw: Any) -> Config:
         for key in ("progress_bar", "session_stats", "edit_more"):
             if isinstance(rev.get(key), bool):
                 setattr(cfg.reviewer, key, rev[key])
+
+    st = raw.get("stats")
+    if isinstance(st, dict):
+        hidden = st.get("hidden_graphs")
+        if isinstance(hidden, list):
+            cfg.stats.hidden_graphs = [g for g in dict.fromkeys(hidden) if g in GRAPHS]
+        for key in ("summary", "study_time"):
+            if isinstance(st.get(key), bool):
+                setattr(cfg.stats, key, st[key])
     return cfg
 
 
@@ -91,4 +125,16 @@ def menu_bar_qss(colors: dict[str, str]) -> str:
         f"QMenuBar::item {{ background: transparent; padding: 4px 8px; }}"
         "QMenuBar::item:selected, QMenuBar::item:pressed"
         f" {{ background: {c['raised']}; color: {c['fg1']}; }}"
+    )
+
+
+def stats_dialog_qss(colors: dict[str, str]) -> str:
+    """Qt stylesheet for the stats window's frame: its deck chooser and buttons."""
+    c = colors
+    return (
+        f"QDialog {{ background: {c['bg']}; color: {c['fg2']}; }}"
+        f"QLabel {{ color: {c['fg3']}; }}"
+        f"QPushButton {{ background: {c['bg']}; color: {c['fg2']}; border: 1px solid {c['line']};"
+        " border-radius: 4px; padding: 3px 12px; }"
+        f"QPushButton:hover {{ background: {c['raised']}; color: {c['fg1']}; }}"
     )
