@@ -22,3 +22,11 @@ No GitHub Actions. `scripts/build.py` makes `dist/anki-dashboard.ankiaddon`; `sc
 
 ## 2026-10-19: Replaced add-ons are not declared as conflicts (decided by Claude, pending review)
 Declaring them in `manifest.json` would make Anki disable them on install. For now the user turns them off by hand, which keeps them available for side-by-side comparison while screens are being built.
+
+## 2026-10-19: Stat definitions (decided by Claude, pending review)
+- **Study time and heatmap use the whole review history**, including cards since deleted. On the user's collection this gives about 1525 min all time, where Study Time Stats showed 19.7 min (it only counted cards that still exist). Review Heatmap already counted everything, so the two now agree.
+- **Current streak** still counts a streak that reached yesterday while today has no reviews yet, so it doesn't read 0 every morning.
+- **This week** runs from Monday, matching the Monday-first heatmap.
+- **Retention** is the share of review-card answers in the last 30 days that were not Again.
+- **Days studied** is a share of the days from the first review through today.
+- **Maturity** counts every card in the deck, including suspended and buried ones; mature means an interval of 21 days or more.
