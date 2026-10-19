@@ -70,7 +70,7 @@ The same visual language: the deck's counts, time left today, maturity bar and a
 ## Repo layout and delivery
 - Python package: `__init__.py`, modules per screen, `web/` (CSS/JS), `config.json` plus `config.md` (shown in Anki's add-on config dialog), `manifest.json`.
 - `README.md`: what it does, screenshots placeholder, install, config reference. Plain and with no emojis.
-- **Install method: `.ankiaddon` from GitHub Releases.** A GitHub Action zips the package into `anki-dashboard.ankiaddon` and attaches it to a release on tag push (`v*`). A local `build` script does the same.
+- **Install method: `.ankiaddon` from GitHub Releases.** A local `build` script zips the package into `anki-dashboard.ankiaddon`; a local release step tags `v*`, creates the GitHub Release and uploads the file with `gh`. No GitHub Actions (checks run locally with `local-ci`).
 - Keep a short `docs/design.md` listing the spec decisions above.
 - Private repo, MIT license unless I say otherwise.
 
