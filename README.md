@@ -43,7 +43,8 @@ Tools > Add-ons > Anki Dashboard > Config.
 
 | Key | Default | Meaning |
 |---|---|---|
-| `colors` | monochrome set | every color, as CSS colors; see the config dialog for each name |
+| `colors` | monochrome set | every color in Anki's dark theme, as CSS colors; see the config dialog for each name |
+| `light_colors` | monochrome set | the same colors for Anki's light theme |
 | `deck_list.columns` | `["due", "new", "learn", "done", "tmrw", "maturity"]` | columns and their order |
 | `deck_list.hide_empty_columns` | `true` | hide a column when every deck shows 0 |
 | `deck_list.today_strip` | `true` | show the two-line summary under the decks |

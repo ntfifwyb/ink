@@ -7,7 +7,7 @@ body {
   --fg: var(--ad-fg1);
   --fg-link: var(--ad-fg1);
   background: var(--ad-bg);
-  color: var(--ad-fg1); /* the text takes the :root --fg, light-theme black in light mode */
+  color: var(--ad-fg1); /* the text takes the :root --fg otherwise, not the body's */
 }
 /* :not(#_) lifts the rule above the page's scoped link styles */
 a:not(#_) { text-decoration: underline; text-decoration-color: var(--ad-fg3); text-underline-offset: 3px; }

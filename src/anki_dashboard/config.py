@@ -22,6 +22,22 @@ COLORS = {
     "accent4": "#3b3b3e",
     "empty": "#1e1e20",
 }
+# Anki's light theme: the dark palette mirrored, with near-black as the accent
+LIGHT_COLORS = {
+    "bg": "#fafafa",
+    "surface": "#f0f0f1",
+    "raised": "#e8e8ea",
+    "line": "#dcdcde",
+    "fg1": "#151516",
+    "fg2": "#505054",
+    "fg3": "#77777c",
+    "fg4": "#b0b0b4",
+    "accent": "#111112",
+    "accent2": "#55555a",
+    "accent3": "#8e8e93",
+    "accent4": "#c6c6c9",
+    "empty": "#e8e8ea",
+}
 DECK_COLUMNS = ("due", "new", "learn", "done", "tmrw", "maturity")
 # Anki's built-in graphs, in page order; the stats page hides those listed in hidden_graphs
 GRAPHS = (
@@ -70,6 +86,7 @@ class StatsConfig:
 @dataclass
 class Config:
     colors: dict[str, str] = field(default_factory=lambda: dict(COLORS))
+    light_colors: dict[str, str] = field(default_factory=lambda: dict(LIGHT_COLORS))
     deck_list: DeckListConfig = field(default_factory=DeckListConfig)
     reviewer: ReviewerConfig = field(default_factory=ReviewerConfig)
     stats: StatsConfig = field(default_factory=StatsConfig)
@@ -79,11 +96,12 @@ def load(raw: Any) -> Config:
     raw = raw if isinstance(raw, dict) else {}
     cfg = Config()
 
-    colors = raw.get("colors")
-    if isinstance(colors, dict):
-        for key, value in colors.items():
-            if key in COLORS and isinstance(value, str) and _COLOR.match(value):
-                cfg.colors[key] = value.strip()
+    for name in ("colors", "light_colors"):
+        colors = raw.get(name)
+        if isinstance(colors, dict):
+            for key, value in colors.items():
+                if key in COLORS and isinstance(value, str) and _COLOR.match(value):
+                    getattr(cfg, name)[key] = value.strip()
 
     deck = raw.get("deck_list")
     if isinstance(deck, dict):
@@ -111,10 +129,22 @@ def load(raw: Any) -> Config:
     return cfg
 
 
-def css_variables(colors: dict[str, str]) -> str:
-    """A :root rule defining each color as --ad-<name>."""
-    body = "".join(f"--ad-{k}:{v};" for k, v in colors.items())
-    return f":root{{{body}}}"
+def palette(cfg: Config, night: bool) -> dict[str, str]:
+    return cfg.colors if night else cfg.light_colors
+
+
+def css_variables(cfg: Config) -> str:
+    """:root rules defining each color as --ad-<name>, light by default and dark under
+    the night-mode class Anki puts on every page's html element and toggles live when
+    the theme changes. --ad-scheme and --ad-shadow go with each palette."""
+
+    def rule(selector: str, colors: dict[str, str], scheme: str, shadow: str) -> str:
+        body = "".join(f"--ad-{k}:{v};" for k, v in colors.items())
+        return f"{selector}{{{body}--ad-scheme:{scheme};--ad-shadow:{shadow};}}"
+
+    return rule(":root", cfg.light_colors, "light", "rgba(0,0,0,.12)") + rule(
+        ":root.night-mode", cfg.colors, "dark", "rgba(0,0,0,.5)"
+    )
 
 
 def menu_bar_qss(colors: dict[str, str]) -> str:

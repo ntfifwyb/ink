@@ -14,6 +14,21 @@
     "accent4": "#3b3b3e",
     "empty": "#1e1e20"
   },
+  "light_colors": {
+    "bg": "#fafafa",
+    "surface": "#f0f0f1",
+    "raised": "#e8e8ea",
+    "line": "#dcdcde",
+    "fg1": "#151516",
+    "fg2": "#505054",
+    "fg3": "#77777c",
+    "fg4": "#b0b0b4",
+    "accent": "#111112",
+    "accent2": "#55555a",
+    "accent3": "#8e8e93",
+    "accent4": "#c6c6c9",
+    "empty": "#e8e8ea"
+  },
   "deck_list": {
     "columns": ["due", "new", "learn", "done", "tmrw", "maturity"],
     "hide_empty_columns": true,

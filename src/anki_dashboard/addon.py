@@ -10,6 +10,7 @@ from aqt.deckbrowser import DeckBrowser, DeckBrowserBottomBar, DeckBrowserConten
 from aqt.overview import Overview, OverviewBottomBar, OverviewContent
 from aqt.reviewer import Reviewer, ReviewerBottomBar
 from aqt.stats import NewDeckStats
+from aqt.theme import theme_manager
 from aqt.toolbar import TopToolbar
 from aqt.utils import tr
 from aqt.webview import AnkiWebView, WebContent
@@ -22,6 +23,10 @@ _session_since = 0  # epoch ms when the reviewer last opened
 
 def _config() -> config.Config:
     return config.load(mw.addonManager.getConfig(__name__))
+
+
+def _palette() -> dict[str, str]:
+    return config.palette(_config(), theme_manager.night_mode)
 
 
 def _web(path: str) -> str:
@@ -48,12 +53,12 @@ def on_webview_will_set_content(content: WebContent, context: object | None) -> 
         content.head += f"<script>{_edit_more_js(cfg.reviewer.edit_more)}</script>"
     else:
         return
-    content.head += f"<style>{config.css_variables(cfg.colors)}</style>"
+    content.head += f"<style>{config.css_variables(cfg)}</style>"
 
 
 def style_menu_bar() -> None:
     """The menu bar is a Qt widget, so it takes a Qt stylesheet instead of CSS."""
-    mw.form.menubar.setStyleSheet(config.menu_bar_qss(_config().colors))
+    mw.form.menubar.setStyleSheet(config.menu_bar_qss(_palette()))
 
 
 def on_deck_browser_will_render_content(browser: DeckBrowser, content: DeckBrowserContent) -> None:
@@ -75,7 +80,7 @@ def on_style_injected(web: AnkiWebView) -> None:
         return
     cfg = _config()
     tags = "".join(f'<link rel="stylesheet" href="{_web(s)}">' for s in sheets)
-    tags += f"<style>{config.css_variables(cfg.colors)}</style>"
+    tags += f"<style>{config.css_variables(cfg)}</style>"
     settings = {
         "titles": stats_page.graph_keys(tr),
         "hidden": cfg.stats.hidden_graphs,
@@ -96,7 +101,16 @@ def on_style_injected(web: AnkiWebView) -> None:
 
 
 def on_stats_dialog_will_show(dialog: NewDeckStats) -> None:
-    dialog.setStyleSheet(config.stats_dialog_qss(_config().colors))
+    dialog.setStyleSheet(config.stats_dialog_qss(_palette()))
+
+
+def on_theme_did_change() -> None:
+    """Pages switch palettes on their own with Anki's night-mode class; the Qt widgets
+    are restyled here."""
+    style_menu_bar()
+    for widget in mw.app.topLevelWidgets():
+        if isinstance(widget, NewDeckStats):
+            on_stats_dialog_will_show(widget)
 
 
 def on_overview_will_render_content(_overview: Overview, content: OverviewContent) -> None:
@@ -132,7 +146,7 @@ def on_js_message(handled: tuple[bool, object], message: str, context: object) -
 
 
 def on_config_updated(_raw: dict) -> None:
-    style_menu_bar()
+    on_theme_did_change()
     mw.toolbar.draw()
     if mw.state == "deckBrowser":
         mw.deckBrowser.refresh()
@@ -158,3 +172,4 @@ def init() -> None:
     gui_hooks.reviewer_did_show_question.append(update_reviewer)
     gui_hooks.main_window_did_init.append(style_menu_bar)
     gui_hooks.stats_dialog_will_show.append(on_stats_dialog_will_show)
+    gui_hooks.theme_did_change.append(on_theme_did_change)
