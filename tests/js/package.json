@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "description": "jsdom tests for src/ink/web, run by .local-ci",
+  "scripts": {
+    "test": "node --test --test-force-exit"
+  },
+  "devDependencies": {
+    "jsdom": "24.1.3"
+  }
+}

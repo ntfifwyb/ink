@@ -14,4 +14,6 @@ step "no emoji";     python3 scripts/check_no_emoji.py
 step "format";       $ruff format --check .
 step "lint";         $ruff check .
 step "test";         $python -m unittest discover -s tests
+# The page scripts run in jsdom, pinned in tests/js/package-lock.json.
+step "js test";      (cd tests/js && npm ci --silent --no-audit --no-fund && npm test --silent)
 step "build";        python3 scripts/build.py
