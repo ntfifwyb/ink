@@ -1,4 +1,6 @@
-**colors**: every color the add-on draws with. Values are CSS colors (`#rrggbb`, `rgb(...)` or a name). The defaults are monochrome: near-black `bg`, `surface` for row hover, `raised` for buttons and tooltips, `line` for rules, four text levels `fg1` (brightest) to `fg4` (dim dashes), and the data ramp `accent` (brightest) to `accent4`. `empty` is the track behind bars.
+**colors**: every color the add-on draws with in Anki's dark theme. Values are CSS colors (`#rrggbb`, `rgb(...)` or a name). The defaults are monochrome: near-black `bg`, `surface` for row hover, `raised` for buttons and tooltips, `line` for rules, four text levels `fg1` (strongest) to `fg4` (dim dashes), and the data ramp `accent` (strongest) to `accent4`. `empty` is the track behind bars.
+
+**light_colors**: the same keys for Anki's light theme (Tools > Preferences > Appearance > Theme). The defaults mirror the dark set: near-white `bg` and near-black `accent`.
 
 **deck_list**
 - `columns`: which columns the deck list shows, in order. Any of `due`, `new`, `learn`, `done`, `tmrw`, `maturity`.

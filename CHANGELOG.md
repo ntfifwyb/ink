@@ -4,6 +4,15 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-20
+
+### Added
+- Light theme. Every screen now follows Anki's theme setting (Tools > Preferences > Appearance > Theme, including Follow system): in light mode the deck list, overview, reviewer bars, stats window, menu bar and congratulations page use a near-white monochrome palette with near-black as the accent, the dark look mirrored. Switching themes restyles open screens without a restart.
+- `light_colors` config section: the light theme's colors, with the same names as `colors`.
+
+### Changed
+- The stats window is no longer dark in light mode; it follows the theme like every other screen.
+
 ## [0.6.6] - 2026-10-20
 
 ### Fixed

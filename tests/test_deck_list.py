@@ -155,12 +155,14 @@ class ConfigTest(unittest.TestCase):
     def test_shipped_config_matches_defaults(self):
         raw = json.loads((SRC / "anki_dashboard" / "config.json").read_text())
         self.assertEqual(raw["colors"], config.COLORS)
+        self.assertEqual(raw["light_colors"], config.LIGHT_COLORS)
         self.assertEqual(config.load(raw), config.Config())
 
     def test_bad_values_fall_back(self):
         cfg = config.load(
             {
                 "colors": {"bg": "red;}</style>", "fg1": "#fff", "nope": "#000"},
+                "light_colors": {"bg": "#fff", "fg1": 3},
                 "deck_list": {
                     "columns": ["done", "x", "done"],
                     "today_strip": "yes",
@@ -172,6 +174,9 @@ class ConfigTest(unittest.TestCase):
         self.assertEqual(cfg.colors["bg"], config.COLORS["bg"])
         self.assertEqual(cfg.colors["fg1"], "#fff")
         self.assertNotIn("nope", cfg.colors)
+        self.assertEqual(cfg.light_colors["bg"], "#fff")
+        self.assertEqual(cfg.light_colors["fg1"], config.LIGHT_COLORS["fg1"])
+        self.assertEqual(cfg.colors["surface"], config.COLORS["surface"])
         self.assertEqual(cfg.deck_list.columns, ["done"])
         self.assertTrue(cfg.deck_list.today_strip)
         self.assertFalse(cfg.deck_list.heatmap)
@@ -197,11 +202,21 @@ class ConfigTest(unittest.TestCase):
     def test_not_a_dict(self):
         self.assertEqual(config.load(None), config.Config())
 
-    def test_css_variables(self):
+    def test_css_variables_light_by_default_dark_in_night_mode(self):
+        cfg = config.Config(colors={"bg": "#000"}, light_colors={"bg": "#fff"})
         self.assertEqual(
-            config.css_variables({"bg": "#000", "fg1": "#fff"}),
-            ":root{--ad-bg:#000;--ad-fg1:#fff;}",
+            config.css_variables(cfg),
+            ":root{--ad-bg:#fff;--ad-scheme:light;--ad-shadow:rgba(0,0,0,.12);}"
+            ":root.night-mode{--ad-bg:#000;--ad-scheme:dark;--ad-shadow:rgba(0,0,0,.5);}",
         )
+
+    def test_palette_follows_theme(self):
+        cfg = config.Config()
+        self.assertEqual(config.palette(cfg, night=True)["bg"], "#0d0d0e")
+        self.assertEqual(config.palette(cfg, night=False)["bg"], "#fafafa")
+
+    def test_palettes_have_the_same_keys(self):
+        self.assertEqual(config.LIGHT_COLORS.keys(), config.COLORS.keys())
 
 
 class BuildTest(unittest.TestCase):
