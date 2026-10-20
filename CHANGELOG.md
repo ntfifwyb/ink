@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-10-20
+
+### Changed
+- Reviewer: the Good button looks like Again, Hard and Easy, without its brighter border and interval. Space still answers Good.
+
 ## [1.0.1] - 2026-10-20
 
 ### Fixed
