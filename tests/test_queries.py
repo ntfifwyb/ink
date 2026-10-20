@@ -1,19 +1,26 @@
 """Queries against a real collection, built with Anki's own backend (the `anki`
 package, which .local-ci installs at the version the add-on is verified against)."""
 
+import ast
+import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
 import unittest
+from datetime import datetime, timedelta
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+SRC = Path(__file__).resolve().parent.parent / "src"
+sys.path.insert(0, str(SRC))
 
 from anki.collection import Collection  # noqa: E402
 
 from ink import queries  # noqa: E402
-from ink.queries import DAY, DayClock  # noqa: E402
+from ink.queries import DayClock  # noqa: E402
+
+DAY = 86400
 
 
 class CollectionTest(unittest.TestCase):
@@ -177,7 +184,7 @@ class DayReviewsTest(CollectionTest):
         )
 
     def test_day_boundaries(self):
-        start = self.clock.cutoff - DAY
+        start = self.clock.start_ms // 1000
         for stamp in (start, self.clock.cutoff - 1, start - 1):
             self.col.db.execute(
                 "insert into revlog values (?, 1, -1, 3, 1, 0, 2500, 1000, 1)", stamp * 1000
@@ -237,7 +244,54 @@ class SummaryTest(CollectionTest):
         self.assertEqual(queries.options_group(self.col, filtered), "filtered")
 
     def test_clock_date_is_the_anki_day(self):
-        self.assertEqual(self.clock.cutoff - self.clock.start_ms // 1000, DAY)
+        c = self.clock
+        self.assertEqual(c.rollover, 4)
+        self.assertEqual(
+            datetime.fromtimestamp(c.start_ms / 1000), datetime(*c.date.timetuple()[:3], 4)
+        )
+        self.assertEqual(
+            datetime.fromtimestamp(c.cutoff),
+            datetime(*c.date.timetuple()[:3], 4) + timedelta(days=1),
+        )
+
+
+# Days around Berlin's switch to summer time, 2026-03-29 at 02:00 local: the Anki day
+# of the 28th starts at 04:00 CET and ends at 04:00 CEST, 23 hours later. Run in a
+# child process, as the time zone has to be set before Anki's backend reads it.
+DST_CHECK = """
+import sys
+from datetime import date, datetime
+from anki.collection import Collection
+sys.path.insert(0, sys.argv[2])
+from ink import queries
+col = Collection(sys.argv[1])
+cutoff = int(datetime(2026, 3, 30, 4).timestamp())
+clock = queries.DayClock(cutoff, 0, date(2026, 3, 29), 4)
+def ms(*local):
+    return int(datetime(*local).timestamp()) * 1000
+for local in ((29, 4, 30), (29, 3, 30), (28, 4, 10), (28, 3, 30)):
+    sql = "insert into revlog values (?, 1, -1, 3, 1, 0, 2500, 1000, 1)"
+    col.db.execute(sql, ms(2026, 3, *local))
+days = sorted(queries.day_reviews(col, clock).items())
+print(repr((days, clock.day_start_ms(1) - ms(2026, 3, 28, 4))))
+col.close()
+"""
+
+
+class DaylightSavingTest(unittest.TestCase):
+    def test_days_follow_local_rollover_across_a_clock_change(self):
+        with tempfile.TemporaryDirectory() as d:
+            out = subprocess.run(
+                [sys.executable, "-c", DST_CHECK, str(Path(d) / "c.anki2"), str(SRC)],
+                env=dict(os.environ, TZ="Europe/Berlin"),
+                capture_output=True,
+                text=True,
+                check=True,
+            ).stdout
+        days, start_error = ast.literal_eval(out)
+        # 29th 04:30 is today; 29th 03:30 and 28th 04:10 the 28th; 28th 03:30 the 27th
+        self.assertEqual(days, [(-2, (1, 1.0)), (-1, (2, 2.0)), (0, (1, 1.0))])
+        self.assertEqual(start_error, 0)
 
 
 if __name__ == "__main__":

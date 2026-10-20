@@ -12,34 +12,46 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime, timedelta
+from datetime import time as dt_time
 
 from .stats import MATURE_IVL, DeckCounts
-
-DAY = 86400
 
 
 @dataclass
 class DayClock:
     """Today's Anki day: `cutoff` is when it ends (epoch seconds), `today` its
-    scheduler day number and `date` its calendar date."""
+    scheduler day number, `date` its calendar date and `rollover` the local hour
+    every Anki day starts at. Days start at that hour in local time, as in Anki, so
+    a day around a daylight-saving change is 23 or 25 hours long."""
 
     cutoff: int
     today: int
     date: date
+    rollover: int = 4
 
     @classmethod
     def of(cls, col) -> DayClock:
         cutoff = col.sched.day_cutoff
-        return cls(cutoff, col.sched.today, date.fromtimestamp(cutoff - DAY))
+        today = datetime.fromtimestamp(cutoff).date() - timedelta(days=1)
+        return cls(cutoff, col.sched.today, today, int(col.get_config("rollover", 4)))
+
+    def day_start_ms(self, days_ago: int = 0) -> int:
+        """When the Anki day `days_ago` days before today started (epoch milliseconds)."""
+        start = datetime.combine(self.date - timedelta(days=days_ago), dt_time(self.rollover))
+        return int(start.timestamp()) * 1000
 
     @property
     def start_ms(self) -> int:
-        return (self.cutoff - DAY) * 1000
+        return self.day_start_ms()
 
     def days_ago_sql(self) -> str:
-        """SQL for how many Anki days before today a revlog entry falls (0 is today)."""
-        return f"(({self.cutoff} - id / 1000 - 1) / {DAY})"
+        """SQL for how many Anki days before today a revlog entry falls (0 is today):
+        the local date of its time less the rollover hours, counted back from today."""
+        return (
+            f"cast(julianday('{self.date.isoformat()}') - julianday(id / 1000, 'unixepoch',"
+            f" 'localtime', '-{self.rollover} hours', 'start of day') as integer)"
+        )
 
 
 def deck_counts(col, clock: DayClock) -> dict[int, DeckCounts]:
@@ -121,7 +133,7 @@ def retention(col, clock: DayClock, days: int = 30, cards: str = "") -> float | 
     `cards` is a `search_filter` clause."""
     passed, total = col.db.first(
         f"select sum(ease > 1), count(*) from revlog where type = 1 and id >= ?{cards}",
-        clock.start_ms - (days - 1) * DAY * 1000,
+        clock.day_start_ms(days - 1),
     )
     return passed / total if total else None
 
@@ -130,7 +142,7 @@ def secs_per_card(col, clock: DayClock, days: int = 30) -> float | None:
     """Average seconds per answer over the last `days` days."""
     reps, ms = col.db.first(
         "select count(*), sum(time) from revlog where ease > 0 and id >= ?",
-        clock.start_ms - (days - 1) * DAY * 1000,
+        clock.day_start_ms(days - 1),
     )
     return ms / 1000 / reps if reps else None
 

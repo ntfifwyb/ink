@@ -5,6 +5,7 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 ## [Unreleased]
 
 ### Fixed
+- Days now start at Anki's rollover hour in local time all year. Before, they were counted in fixed 24-hour steps back from today, so after a daylight-saving change, reviews made in the hour around the rollover could land on the neighbouring day in the heatmap, streaks, this week's time and the stats page.
 - Stats window: Save PDF prints its header (the deck or search, the range and the date) when `stats.summary` is off, with or without `stats.study_time`. It was left out of the page.
 - Config: a color left blank, or a list with something other than names in it (such as `[["due"]]` in `deck_list.columns`), now falls back to the default instead of drawing without that color or breaking the deck list.
 
