@@ -35,7 +35,7 @@ The top toolbar, menu bar and bottom bar take the same background, and so does A
 
 ## Install
 
-Download `ink.ankiaddon` from the [latest release](https://github.com/montinaops/ink/releases) and open it with Anki (or Tools > Add-ons > Install from file). Anki turns off the four add-ons it replaces on install; you can turn them back on in the add-ons list.
+Download `ink.ankiaddon` from the [latest release](https://github.com/ntfifwyb/ink/releases) and open it with Anki (or Tools > Add-ons > Install from file). Anki turns off the four add-ons it replaces on install; you can turn them back on in the add-ons list.
 
 Updating from Anki Dashboard (0.7.0 or earlier): Ink is the same add-on under a new name, and Anki installs it as a new add-on. Delete Anki Dashboard in Tools > Add-ons first, or both run at once. Settings don't carry over: copy them from its Config before deleting it if you changed any.
 
