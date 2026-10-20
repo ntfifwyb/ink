@@ -22,14 +22,12 @@ html:not(.ad-edit-more) .stat { display: none; }
 #middle button:hover { border-color: var(--ad-fg3); }
 #middle button:focus { outline: none; }
 #middle button:focus-visible { border-color: var(--ad-fg2); }
-#middle #defease { border-color: var(--ad-accent3); }
 #middle #ansbut { min-width: 200px; }
 
 #middle .nobold, #middle .stattxt {
   position: static; transform: none; display: block;
   color: var(--ad-fg3); font-size: 11px; font-weight: 400;
 }
-#middle #defease .nobold { color: var(--ad-accent); }
 .new-count, .learn-count, .review-count { color: var(--ad-fg3); }
 #middle .stattxt u { color: var(--ad-fg1); text-decoration: none; }
 
