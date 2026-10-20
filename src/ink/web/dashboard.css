@@ -2,7 +2,11 @@
    set from config.json; this file only uses them. Spacing scale: 4 8 12 16 24 32 px. */
 
 html, body { overflow-x: hidden; }
+/* --canvas too: once a SvelteKit page (the congratulations screen) has been shown,
+   Anki appends `body { background-color: var(--canvas) }` after these sheets on every
+   later page in the main window, which would otherwise win over the background here. */
 body {
+  --canvas: var(--ad-bg);
   background: var(--ad-bg);
   color: var(--ad-fg1);
   font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;

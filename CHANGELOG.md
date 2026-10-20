@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-20
+
+### Fixed
+- The deck list and deck overview keep Ink's background after you finish a deck. Once Anki had shown its congratulations screen, both went back to Anki's own background until restart, while the toolbar and bottom bar stayed Ink's.
+
 ## [1.0.0] - 2026-10-20
 
 The first stable release: the four screens are complete, tested on the oldest and newest supported Anki, and an error in Ink no longer takes a screen down with it.
