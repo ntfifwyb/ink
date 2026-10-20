@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-10-20
+
+### Changed
+- Full screen: moving the pointer down to Show Answer or the answer buttons no longer brings up the menu bar (File, Edit, ...). Moving it to the top edge still does.
+
 ## [1.0.2] - 2026-10-20
 
 ### Changed
