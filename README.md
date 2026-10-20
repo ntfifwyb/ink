@@ -58,6 +58,10 @@ Tools > Add-ons > Ink > Config.
 | `stats.study_time` | `true` | show the Study time card |
 | `stats.hidden_graphs` | `["today", "calendar"]` | built-in graphs to hide: `today`, `future_due`, `calendar`, `reviews`, `card_counts`, `intervals`, `ease`, `difficulty`, `stability`, `retrievability`, `retention`, `hours`, `buttons`, `added` |
 
+## If something goes wrong
+
+If Ink hits an error on a screen, it leaves that screen as Anki draws it and says so once. The details are in `user_files/errors.log` in Ink's folder (Tools > Add-ons > Ink > View Files); attach that file to an [issue](https://github.com/ntfifwyb/ink/issues).
+
 ## Development
 
 The add-on's files are in `src/ink`.

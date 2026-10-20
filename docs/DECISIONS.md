@@ -87,3 +87,6 @@ The user moved the repo from the `montinaops` organization to their personal acc
 
 ## 2026-10-20: Days follow the local rollover across clock changes
 The user asked to fix the daylight-saving edge found in the audit. Each review's day is now the local date of its time less the rollover hours (Anki's own day boundaries), worked out by SQLite's `localtime`, instead of 24-hour steps back from today's cutoff. A day around a clock change is 23 or 25 hours long. Costs about 5 ms more per deck-list draw on the user's 14.5k reviews; on that history no day changed.
+
+## 2026-10-20: Errors fall back to Anki's screen
+Chosen by the user for v1, over keeping Anki's error dialog: every hook is guarded, so an error leaves that screen as Anki draws it (Anki's deck table, its overview counts, the graphs without Ink's sections) and the hook stays registered; by default Anki removes a hook that raises until restart. The first error in a session shows a tooltip; each is appended to `user_files/errors.log` (kept across updates, restarted past 100 kB).

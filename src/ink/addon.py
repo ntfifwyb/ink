@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import time
+from pathlib import Path
 
 from aqt import gui_hooks, mw
 from aqt.deckbrowser import DeckBrowser, DeckBrowserBottomBar, DeckBrowserContent
@@ -12,13 +13,31 @@ from aqt.reviewer import Reviewer, ReviewerBottomBar
 from aqt.stats import NewDeckStats
 from aqt.theme import theme_manager
 from aqt.toolbar import TopToolbar
-from aqt.utils import tr
+from aqt.utils import tooltip, tr
 from aqt.webview import AnkiWebView, WebContent
 
 from . import config, deck_list, overview, reviewer, stats_page
+from .guard import Guard
 
 _heat_year: int | None = None  # heatmap year picked with the arrows; None is this year
 _session_since = 0  # epoch ms when the reviewer last opened
+_HERE = Path(__file__).resolve().parent
+_EMPTY_STATS = {"scope": "", "summary": "", "study": ""}
+
+
+def _notify_error() -> None:
+    tooltip(
+        "Ink hit an error and left this screen as Anki draws it. Details are in "
+        "user_files/errors.log (Tools > Add-ons > Ink > View Files).",
+        period=10000,
+    )
+
+
+guarded = Guard(
+    _HERE / "user_files" / "errors.log",
+    _notify_error,
+    json.loads((_HERE / "manifest.json").read_text(encoding="utf-8"))["human_version"],
+)
 
 
 def _config() -> config.Config:
@@ -37,6 +56,7 @@ def _edit_more_js(show: bool) -> str:
     return f"document.documentElement.classList.toggle('ad-edit-more', {json.dumps(show)});"
 
 
+@guarded()
 def on_webview_will_set_content(content: WebContent, context: object | None) -> None:
     cfg = _config()
     if isinstance(context, (DeckBrowser, Overview)):
@@ -56,17 +76,20 @@ def on_webview_will_set_content(content: WebContent, context: object | None) -> 
     content.head += f"<style>{config.css_variables(cfg)}</style>"
 
 
+@guarded()
 def style_menu_bar() -> None:
     """The menu bar is a Qt widget, so it takes a Qt stylesheet instead of CSS."""
     mw.form.menubar.setStyleSheet(config.menu_bar_qss(_palette()))
 
 
+@guarded()
 def on_deck_browser_will_render_content(browser: DeckBrowser, content: DeckBrowserContent) -> None:
     content.tree, content.stats = deck_list.build(
         mw.col, browser._render_data.tree, _config(), _heat_year
     )
 
 
+@guarded()
 def on_style_injected(web: AnkiWebView) -> None:
     """The congratulations page (shown in place of a finished deck's overview) and the
     stats page are SvelteKit pages that skip webview_will_set_content, so their styles
@@ -100,10 +123,12 @@ def on_style_injected(web: AnkiWebView) -> None:
     )
 
 
+@guarded()
 def on_stats_dialog_will_show(dialog: NewDeckStats) -> None:
     dialog.setStyleSheet(config.stats_dialog_qss(_palette()))
 
 
+@guarded()
 def on_theme_did_change() -> None:
     """Pages switch palettes on their own with Anki's night-mode class; the Qt widgets
     are restyled here."""
@@ -113,16 +138,24 @@ def on_theme_did_change() -> None:
             on_stats_dialog_will_show(widget)
 
 
+@guarded()
 def on_overview_will_render_content(_overview: Overview, content: OverviewContent) -> None:
     content.table = overview.build(mw.col)
 
 
+@guarded()
 def on_state_will_change(new_state: str, old_state: str) -> None:
     global _session_since
     if new_state == "review" and old_state != "review":
         _session_since = int(time.time() * 1000)
 
 
+def _clear_reviewer(*_args: object) -> None:
+    """Without fresh numbers, no bar or session line rather than the last card's."""
+    mw.reviewer.web.eval("window.adReview && adReview('');")
+
+
+@guarded(_clear_reviewer)
 def update_reviewer(*_args: object) -> None:
     """Redraw the progress bar and session stats; runs after each question is shown."""
     cfg = _config().reviewer
@@ -132,6 +165,15 @@ def update_reviewer(*_args: object) -> None:
     mw.reviewer.web.eval(f"adReview({json.dumps(html)});")
 
 
+def _js_message_failed(handled: tuple[bool, object], message: str, _context: object) -> tuple:
+    if message.startswith("ad-stats:"):
+        return True, _EMPTY_STATS  # the page then shows only Anki's graphs
+    if message.startswith("ad-year:"):
+        return True, None
+    return handled
+
+
+@guarded(_js_message_failed)
 def on_js_message(handled: tuple[bool, object], message: str, context: object) -> tuple:
     global _heat_year
     if isinstance(context, DeckBrowser) and message.startswith("ad-year:"):
@@ -145,6 +187,7 @@ def on_js_message(handled: tuple[bool, object], message: str, context: object) -
     return handled
 
 
+@guarded()
 def on_config_updated(_raw: dict) -> None:
     on_theme_did_change()
     mw.toolbar.draw()
