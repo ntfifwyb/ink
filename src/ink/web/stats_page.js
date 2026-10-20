@@ -34,7 +34,11 @@
     if (head.nextElementSibling !== grid && head.nextElementSibling !== document.getElementById("ad-sum")) {
       grid.parentNode.insertBefore(head, grid);
     }
-    if (head.innerHTML !== sections.scope) head.innerHTML = sections.scope;
+    // compared with the HTML last set, as innerHTML reads back re-serialized (&middot; as ·)
+    if (head.dataset.html !== sections.scope) {
+      head.innerHTML = sections.scope;
+      head.dataset.html = sections.scope;
+    }
     if (cfg.summary) {
       const sum = own("ad-sum", function () { return document.createElement("div"); });
       if (sum.nextElementSibling !== grid) grid.parentNode.insertBefore(sum, grid);

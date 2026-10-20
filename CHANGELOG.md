@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-10-20
+
+### Fixed
+- Stats window: the page no longer redraws its print header on every frame while open, which kept the window busy and used CPU for as long as it stayed open.
+
 ## [0.8.0] - 2026-10-20
 
 ### Changed
