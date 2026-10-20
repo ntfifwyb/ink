@@ -1,7 +1,7 @@
 # Tool settings only; the add-on itself ships as src/ink (see scripts/build.py).
 [tool.ruff]
-# Anki 23.10 bundles Python 3.9, the oldest the add-on supports.
-target-version = "py39"
+# Anki 26.5, the oldest the add-on supports, requires Python 3.10 or later.
+target-version = "py310"
 line-length = 100
 
 [tool.ruff.lint]

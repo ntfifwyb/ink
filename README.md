@@ -2,9 +2,13 @@
 
 An Anki add-on that replaces four stats add-ons (Review Heatmap, More Decks Stats and Time Left, Study Time Stats, and Enhance main window) with one minimal, information-dense design: monochrome with white as the only accent, across the deck list, deck overview, reviewer and stats page.
 
-Status: all four screens are done: deck list with heatmap, deck overview, reviewer and stats page. The build spec is in [docs/spec.md](docs/spec.md), design rules in [docs/design.md](docs/design.md), and the approved mockup in [docs/mockup.html](docs/mockup.html).
+Requires Anki 26.5 or later (Qt6). Tested on 26.5 and 26.9.3, in the dark and light themes. The build spec is in [docs/spec.md](docs/spec.md), design rules in [docs/design.md](docs/design.md), and the approved mockup in [docs/mockup.html](docs/mockup.html).
 
-Screenshots: to come.
+![Deck list with the today summary and the review heatmap, dark theme](docs/screenshots/deck-list-dark.png)
+
+| Light theme | Deck overview |
+|---|---|
+| ![Deck list, light theme](docs/screenshots/deck-list-light.png) | ![Deck overview, dark theme](docs/screenshots/overview-dark.png) |
 
 ## What it shows
 
@@ -66,7 +70,7 @@ If Ink hits an error on a screen, it leaves that screen as Anki draws it and say
 
 The add-on's files are in `src/ink`.
 
-- `./.local-ci` runs the checks: no emojis, ruff format and lint, unit tests, and the build. `local-ci` runs the same file and posts the result to the PR.
+- `./.local-ci` runs the checks: no emojis, ruff format and lint, the Python tests against Anki 26.5 and 26.9.3, the page scripts' tests in jsdom (`tests/js`, needs Node), and the build. `local-ci` runs the same file and posts the result to the PR.
 - `python3 scripts/build.py` writes `dist/ink.ankiaddon`.
 - `scripts/release.sh` publishes the version in `manifest.json` (`human_version`) as a GitHub Release, run from an up-to-date `main`.
 

@@ -5,15 +5,19 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 ruff="uvx ruff@0.14.0"
-# The tests build real collections with Anki's backend, at the version the add-on is verified on.
-python="uv run --no-project --with anki==26.9.3 python"
+# The tests build real collections with Anki's backend: at the oldest version manifest.json
+# accepts (min_point_version) and the newest the add-on is verified on.
+anki_versions="26.5 26.9.3"
 
 step() { echo; echo "== $*"; }
 
 step "no emoji";     python3 scripts/check_no_emoji.py
 step "format";       $ruff format --check .
 step "lint";         $ruff check .
-step "test";         $python -m unittest discover -s tests
+for v in $anki_versions; do
+  step "test, anki $v"
+  uv run --no-project --with "anki==$v" python -m unittest discover -s tests
+done
 # The page scripts run in jsdom, pinned in tests/js/package-lock.json.
 step "js test";      (cd tests/js && npm ci --silent --no-audit --no-fund && npm test --silent)
 step "build";        python3 scripts/build.py

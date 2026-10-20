@@ -90,3 +90,6 @@ The user asked to fix the daylight-saving edge found in the audit. Each review's
 
 ## 2026-10-20: Errors fall back to Anki's screen
 Chosen by the user for v1, over keeping Anki's error dialog: every hook is guarded, so an error leaves that screen as Anki draws it (Anki's deck table, its overview counts, the graphs without Ink's sections) and the hook stays registered; by default Anki removes a hook that raises until restart. The first error in a session shows a tooltip; each is appended to `user_files/errors.log` (kept across updates, restarted past 100 kB).
+
+## 2026-10-20: v1 supports Anki 26.5 and later
+For v1 the user chose to support only what's tested, over keeping 23.10 and testing it: `min_point_version` is 260500 (26.5, the first 26.x release), replacing "keep `min_point_version` at 23.10" (2026-10-19). Found while checking: 23.10's deck browser has no `_render_data`, so the deck list failed there. `.local-ci` runs the Python tests against Anki 26.5 and 26.9.3, and ruff targets Python 3.10, the oldest Anki 26.5 runs on. Every screen was checked live on both, in both themes. Also for v1: errors fall back to Anki's screen (above); releases stay on GitHub only, not AnkiWeb, so updates are manual.

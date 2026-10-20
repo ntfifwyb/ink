@@ -184,7 +184,7 @@ def render_chart(ps: list[Period], unit: str) -> str:
     base = TOP + ph
 
     bars, hovers, points = [], [], []
-    for i, (p, pace) in enumerate(zip(ps, paces)):
+    for i, (p, pace) in enumerate(zip(ps, paces, strict=True)):
         x = LEFT + i * slot
         if p.secs:
             h = max(ph * p.secs / max_secs, 1.0)
