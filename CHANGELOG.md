@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-10-20
+
+### Changed
+- Full screen: the menu bar (File, Edit, ...) stays visible all the time, instead of appearing only when the pointer reaches the top edge.
+
 ## [1.0.3] - 2026-10-20
 
 ### Changed

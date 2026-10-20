@@ -35,7 +35,7 @@ Under the decks, two lines sum up today: cards, time, seconds per card, time lef
 
 **Stats page.** Anki's graphs in grays on the same background, with four numbers on top (30-day retention, current streak, study time, cards per study day) and a Study time card: time per day, week or month as bars with seconds per card as a line, and today, this week, this month and the average per study day underneath. Both follow the page's deck / collection / search and its 12 months / all history choice. Today and Calendar are hidden by default, since the summary and the deck-list heatmap cover them.
 
-The top toolbar, menu bar and bottom bar take the same background, and so does Anki's "finished this deck" page. In full screen, the menu bar comes back only at the top edge, not over the answer buttons.
+The top toolbar, menu bar and bottom bar take the same background, and so does Anki's "finished this deck" page. The menu bar stays visible in full screen too.
 
 ## Install
 
