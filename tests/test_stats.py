@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from anki_dashboard.stats import (  # noqa: E402
+from ink.stats import (  # noqa: E402
     DeckCounts,
     TreeNode,
     current_streak,

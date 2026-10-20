@@ -1,4 +1,4 @@
-/* anki-dashboard: the reviewer's card page. The card keeps the note's styling; only
+/* Ink: the reviewer's card page. The card keeps the note's styling; only
    Anki's page color is redefined, so the default card background matches the toolbar
    and bottom bar while a note that sets its own background keeps it. */
 

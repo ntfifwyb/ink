@@ -7,8 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from anki_dashboard import heatmap  # noqa: E402
-from anki_dashboard.heatmap import Heatmap  # noqa: E402
+from ink import heatmap  # noqa: E402
+from ink.heatmap import Heatmap  # noqa: E402
 
 TODAY = date(2026, 10, 19)  # a Monday
 

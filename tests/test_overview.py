@@ -9,9 +9,9 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parent.parent / "src"
 sys.path.insert(0, str(SRC))
 
-from anki_dashboard import overview  # noqa: E402
-from anki_dashboard.overview import Deck  # noqa: E402
-from anki_dashboard.stats import DeckCounts  # noqa: E402
+from ink import overview  # noqa: E402
+from ink.overview import Deck  # noqa: E402
+from ink.stats import DeckCounts  # noqa: E402
 
 
 def deck(**kw):

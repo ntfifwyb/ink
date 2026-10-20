@@ -1,6 +1,6 @@
-# Build: anki-dashboard
+# Build: Ink (formerly anki-dashboard)
 
-Build a single Anki add-on that replaces four add-ons I currently use. Change their info, layout and color scheme into one coherent, minimal but information-dense design. Put it in a new private GitHub repo: **montinaops/anki-dashboard** (org: `montinaops`; the org's repos use descriptive kebab-case names).
+Build a single Anki add-on that replaces four add-ons I currently use. Change their info, layout and color scheme into one coherent, minimal but information-dense design. Put it in a new private GitHub repo: **montinaops/anki-dashboard**, renamed **montinaops/ink** on 2026-10-20 (org: `montinaops`; the org's repos use descriptive kebab-case names).
 
 ## Hard rules
 - **No emojis anywhere in the project**: UI, README, comments, commit messages.
@@ -70,7 +70,7 @@ The same visual language: the deck's counts, time left today, maturity bar and a
 ## Repo layout and delivery
 - Python package: `__init__.py`, modules per screen, `web/` (CSS/JS), `config.json` plus `config.md` (shown in Anki's add-on config dialog), `manifest.json`.
 - `README.md`: what it does, screenshots placeholder, install, config reference. Plain and with no emojis.
-- **Install method: `.ankiaddon` from GitHub Releases.** A local `build` script zips the package into `anki-dashboard.ankiaddon`; a local release step tags `v*`, creates the GitHub Release and uploads the file with `gh`. No GitHub Actions (checks run locally with `local-ci`).
+- **Install method: `.ankiaddon` from GitHub Releases.** A local `build` script zips the package into `ink.ankiaddon`; a local release step tags `v*`, creates the GitHub Release and uploads the file with `gh`. No GitHub Actions (checks run locally with `local-ci`).
 - Keep a short `docs/design.md` listing the spec decisions above.
 - Private repo, MIT license unless I say otherwise.
 

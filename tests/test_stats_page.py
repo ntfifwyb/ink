@@ -9,8 +9,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from anki_dashboard import stats_page  # noqa: E402
-from anki_dashboard.stats_page import StatsPage  # noqa: E402
+from ink import stats_page  # noqa: E402
+from ink.stats_page import StatsPage  # noqa: E402
 
 MONDAY = date(2026, 10, 19)
 
@@ -151,7 +151,7 @@ class GraphKeysTest(unittest.TestCase):
         self.assertEqual(stats_page.graph_keys(Tr()), {"Heute": "today", "Stunden": "hours"})
 
     def test_every_config_graph_has_a_title(self):
-        from anki_dashboard import config
+        from ink import config
 
         self.assertEqual(tuple(stats_page.GRAPH_TITLES), config.GRAPHS)
 
@@ -195,7 +195,7 @@ class BuildTest(unittest.TestCase):
         shutil.rmtree(self.dir)
 
     def test_whole_collection_and_bad_search(self):
-        from anki_dashboard.queries import DayClock
+        from ink.queries import DayClock
 
         cutoff = DayClock.of(self.col).cutoff
         self.col.db.execute(

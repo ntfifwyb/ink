@@ -1,4 +1,4 @@
-/* anki-dashboard: Anki's stats page (the SvelteKit graphs page). Its theme variables
+/* Ink: Anki's stats page (the SvelteKit graphs page). Its theme variables
    are redefined, its graph cards restyled, and its colored graphs turned to grays:
    stats_page.js tags each card with data-ad-graph, so palettes with a meaning (answer
    buttons, card types) map to the gray ramp one color at a time, while gradients that

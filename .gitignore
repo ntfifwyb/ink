@@ -4,4 +4,4 @@ __pycache__/
 *.ankiaddon
 dist/
 .env
-src/anki_dashboard/meta.json
+src/ink/meta.json

@@ -29,13 +29,13 @@ class BuildTest(unittest.TestCase):
 
     def test_manifest_names_the_package(self):
         manifest = json.loads((build.SRC / "manifest.json").read_text())
-        self.assertEqual(manifest["package"], "anki_dashboard")
+        self.assertEqual(manifest["package"], "ink")
 
     def test_package_imports_outside_anki(self):
         sys.path.insert(0, str(ROOT / "src"))
-        import anki_dashboard
+        import ink
 
-        self.assertIsNone(anki_dashboard.mw)
+        self.assertIsNone(ink.mw)
 
 
 if __name__ == "__main__":

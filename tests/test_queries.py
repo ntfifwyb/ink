@@ -12,8 +12,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from anki.collection import Collection  # noqa: E402
 
-from anki_dashboard import queries  # noqa: E402
-from anki_dashboard.queries import DAY, DayClock  # noqa: E402
+from ink import queries  # noqa: E402
+from ink.queries import DAY, DayClock  # noqa: E402
 
 
 class CollectionTest(unittest.TestCase):

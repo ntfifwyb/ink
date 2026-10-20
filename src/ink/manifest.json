@@ -1,0 +1,13 @@
+{
+  "package": "ink",
+  "name": "Ink",
+  "human_version": "0.8.0",
+  "homepage": "https://github.com/montinaops/ink",
+  "min_point_version": 231000,
+  "conflicts": [
+    "1771074083",
+    "1556734708",
+    "1247171202",
+    "877182321"
+  ]
+}

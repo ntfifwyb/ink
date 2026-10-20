@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-20
+
+### Changed
+- The add-on is now called Ink, and its repository is `montinaops/ink`. Ink installs as a new add-on, next to Anki Dashboard rather than over it: delete Anki Dashboard in Tools > Add-ons before or after installing, or both run at once. Its settings don't carry over, so copy any you changed from its Config first.
+
 ## [0.7.0] - 2026-10-20
 
 ### Added

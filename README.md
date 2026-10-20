@@ -1,4 +1,4 @@
-# anki-dashboard
+# Ink
 
 An Anki add-on that replaces four stats add-ons (Review Heatmap, More Decks Stats and Time Left, Study Time Stats, and Enhance main window) with one minimal, information-dense design: monochrome with white as the only accent, across the deck list, deck overview, reviewer and stats page.
 
@@ -35,11 +35,13 @@ The top toolbar, menu bar and bottom bar take the same background, and so does A
 
 ## Install
 
-Download `anki-dashboard.ankiaddon` from the [latest release](https://github.com/montinaops/anki-dashboard/releases) and open it with Anki (or Tools > Add-ons > Install from file). Anki turns off the four add-ons it replaces on install; you can turn them back on in the add-ons list.
+Download `ink.ankiaddon` from the [latest release](https://github.com/montinaops/ink/releases) and open it with Anki (or Tools > Add-ons > Install from file). Anki turns off the four add-ons it replaces on install; you can turn them back on in the add-ons list.
+
+Updating from Anki Dashboard (0.7.0 or earlier): Ink is the same add-on under a new name, and Anki installs it as a new add-on. Delete Anki Dashboard in Tools > Add-ons first, or both run at once. Settings don't carry over: copy them from its Config before deleting it if you changed any.
 
 ## Configuration
 
-Tools > Add-ons > Anki Dashboard > Config.
+Tools > Add-ons > Ink > Config.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -58,10 +60,10 @@ Tools > Add-ons > Anki Dashboard > Config.
 
 ## Development
 
-The add-on's files are in `src/anki_dashboard`.
+The add-on's files are in `src/ink`.
 
 - `./.local-ci` runs the checks: no emojis, ruff format and lint, unit tests, and the build. `local-ci` runs the same file and posts the result to the PR.
-- `python3 scripts/build.py` writes `dist/anki-dashboard.ankiaddon`.
+- `python3 scripts/build.py` writes `dist/ink.ankiaddon`.
 - `scripts/release.sh` publishes the version in `manifest.json` (`human_version`) as a GitHub Release, run from an up-to-date `main`.
 
 ## License
