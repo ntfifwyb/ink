@@ -1,4 +1,4 @@
-/* anki-dashboard: Anki's congratulations page, shown in place of the overview when a
+/* Ink: Anki's congratulations page, shown in place of the overview when a
    deck is finished for today. It is a SvelteKit page, so only its theme variables
    are redefined; the add-on links this file in after Anki styles the page. */
 

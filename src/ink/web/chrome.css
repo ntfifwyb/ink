@@ -1,4 +1,4 @@
-/* anki-dashboard: Anki's top toolbar and the deck list and overview bottom bars,
+/* Ink: Anki's top toolbar and the deck list and overview bottom bars,
    recolored by redefining Anki's own theme variables so its layout stays as is.
    In review the toolbar is .flat and copies the card's background, so it is left alone. */
 

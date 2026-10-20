@@ -1,4 +1,4 @@
-"""anki-dashboard: one minimal, monochrome stats layer for the deck list, overview,
+"""Ink: one minimal, monochrome stats layer for the deck list, overview,
 reviewer and stats page. Replaces Review Heatmap, More Decks Stats and Time Left,
 Study Time Stats and Enhance main window."""
 

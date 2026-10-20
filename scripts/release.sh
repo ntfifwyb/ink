@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Publish the version in src/anki_dashboard/manifest.json as a GitHub Release.
+# Publish the version in src/ink/manifest.json as a GitHub Release.
 # Run from an up-to-date main after the release PR merged: tags v<version>, builds
-# dist/anki-dashboard.ankiaddon and uploads it, with the CHANGELOG section as notes.
+# dist/ink.ankiaddon and uploads it, with the CHANGELOG section as notes.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-version=$(python3 -c 'import json; print(json.load(open("src/anki_dashboard/manifest.json"))["human_version"])')
+version=$(python3 -c 'import json; print(json.load(open("src/ink/manifest.json"))["human_version"])')
 tag="v$version"
 
 [ "$(git branch --show-current)" = main ] || { echo "release: check out main first" >&2; exit 1; }
@@ -28,4 +28,4 @@ notes=$(awk -v v="$version" '
 python3 scripts/build.py
 git tag -a "$tag" -m "$tag"
 git push origin "$tag"
-gh release create "$tag" dist/anki-dashboard.ankiaddon --title "$tag" --notes "$notes"
+gh release create "$tag" dist/ink.ankiaddon --title "$tag" --notes "$notes"

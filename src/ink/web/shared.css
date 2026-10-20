@@ -1,4 +1,4 @@
-/* anki-dashboard: the pieces every page with the add-on's HTML uses, the reviewer
+/* Ink: the pieces every page with the add-on's HTML uses, the reviewer
    included: dim zeros, separators and the tooltip that dashboard.js positions. */
 
 .ad-zero { color: var(--ad-fg4); }

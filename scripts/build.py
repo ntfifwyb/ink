@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Zip src/anki_dashboard into dist/anki-dashboard.ankiaddon.
+"""Zip src/ink into dist/ink.ankiaddon.
 
 Anki expects the add-on's files at the root of the archive, without the package
 folder or bytecode. meta.json is left out: Anki writes the user's settings there when
@@ -13,8 +13,8 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "src" / "anki_dashboard"
-OUT = ROOT / "dist" / "anki-dashboard.ankiaddon"
+SRC = ROOT / "src" / "ink"
+OUT = ROOT / "dist" / "ink.ankiaddon"
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)
 
 

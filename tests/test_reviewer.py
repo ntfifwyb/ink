@@ -10,8 +10,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from anki.collection import Collection  # noqa: E402
 
-from anki_dashboard import reviewer  # noqa: E402
-from anki_dashboard.reviewer import Review  # noqa: E402
+from ink import reviewer  # noqa: E402
+from ink.reviewer import Review  # noqa: E402
 
 
 def review(**kw):

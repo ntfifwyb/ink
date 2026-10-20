@@ -1,4 +1,4 @@
-/* anki-dashboard: the reviewer's answer bar, loaded after chrome.css. Interval and
+/* Ink: the reviewer's answer bar, loaded after chrome.css. Interval and
    count labels move inside their buttons, so every button is the same two-line height
    and the bar doesn't jump between question and answer. Edit and More hide unless
    reviewer.edit_more is on (the html element then has .ad-edit-more). */

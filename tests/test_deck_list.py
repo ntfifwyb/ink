@@ -8,9 +8,9 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parent.parent / "src"
 sys.path.insert(0, str(SRC))
 
-from anki_dashboard import config, deck_list  # noqa: E402
-from anki_dashboard.deck_list import Row, Today  # noqa: E402
-from anki_dashboard.stats import DeckCounts  # noqa: E402
+from ink import config, deck_list  # noqa: E402
+from ink.deck_list import Row, Today  # noqa: E402
+from ink.stats import DeckCounts  # noqa: E402
 
 
 def row(deck_id=1, **kw):
@@ -153,7 +153,7 @@ class ConfigTest(unittest.TestCase):
         self.assertIn("background: #111111;", qss)
 
     def test_shipped_config_matches_defaults(self):
-        raw = json.loads((SRC / "anki_dashboard" / "config.json").read_text())
+        raw = json.loads((SRC / "ink" / "config.json").read_text())
         self.assertEqual(raw["colors"], config.COLORS)
         self.assertEqual(raw["light_colors"], config.LIGHT_COLORS)
         self.assertEqual(config.load(raw), config.Config())

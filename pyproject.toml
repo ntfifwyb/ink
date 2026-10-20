@@ -1,4 +1,4 @@
-# Tool settings only; the add-on itself ships as src/anki_dashboard (see scripts/build.py).
+# Tool settings only; the add-on itself ships as src/ink (see scripts/build.py).
 [tool.ruff]
 # Anki 23.10 bundles Python 3.9, the oldest the add-on supports.
 target-version = "py39"
