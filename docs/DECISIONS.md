@@ -81,3 +81,6 @@ The user asked for a light theme that follows Anki's theme preference, after che
 
 ## 2026-10-20: Renamed to Ink
 The user renamed the add-on Ink, and the repo `montinaops/ink`, chosen from name ideas around its monochrome look. Chosen from two options: rename the package and the add-on folder to `ink` too, rather than keeping the internal `anki_dashboard` package so updates stay in place. The user asked for no code that disables Anki Dashboard or copies its settings, since only one install exists and the old add-on won't be released again: updating means deleting it by hand, as the changelog and README say. The internal `--ad-*` CSS variable prefix stays, as nothing outside the add-on sees it.
+
+## 2026-10-20: Moved to the personal account
+The user moved the repo from the `montinaops` organization to their personal account, as `ntfifwyb/ink`, with the local folder at `~/projects/ntfifwyb/ink`. GitHub's transfer kept the releases, issues and PRs, and it redirects the old URLs, so v0.8.0's manifest homepage still resolves. The add-on itself is unchanged, so no release.

@@ -1,6 +1,6 @@
 # Build: Ink (formerly anki-dashboard)
 
-Build a single Anki add-on that replaces four add-ons I currently use. Change their info, layout and color scheme into one coherent, minimal but information-dense design. Put it in a new private GitHub repo: **montinaops/anki-dashboard**, renamed **montinaops/ink** on 2026-10-20 (org: `montinaops`; the org's repos use descriptive kebab-case names).
+Build a single Anki add-on that replaces four add-ons I currently use. Change their info, layout and color scheme into one coherent, minimal but information-dense design. Put it in a new private GitHub repo: **montinaops/anki-dashboard**, renamed **montinaops/ink** on 2026-10-20 and moved to the personal account as **ntfifwyb/ink** the same day (repos use descriptive kebab-case names).
 
 ## Hard rules
 - **No emojis anywhere in the project**: UI, README, comments, commit messages.
