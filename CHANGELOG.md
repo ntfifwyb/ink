@@ -4,6 +4,11 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+## [0.6.6] - 2026-10-20
+
+### Fixed
+- Stats window on Linux: the Close button no longer shows a faint stray mark before its label. It was Qt's close icon, black on the dark frame; the window's buttons are now text only, as on Windows and macOS.
+
 ## [0.6.5] - 2026-10-20
 
 ### Fixed

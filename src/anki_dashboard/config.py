@@ -129,12 +129,15 @@ def menu_bar_qss(colors: dict[str, str]) -> str:
 
 
 def stats_dialog_qss(colors: dict[str, str]) -> str:
-    """Qt stylesheet for the stats window's frame: its deck chooser and buttons."""
+    """Qt stylesheet for the stats window's frame: its deck chooser and buttons.
+
+    Buttons draw no icon: on Linux, Qt gives Close a black X that is all but invisible on `bg`.
+    """
     c = colors
     return (
         f"QDialog {{ background: {c['bg']}; color: {c['fg2']}; }}"
         f"QLabel {{ color: {c['fg3']}; }}"
         f"QPushButton {{ background: {c['bg']}; color: {c['fg2']}; border: 1px solid {c['line']};"
-        " border-radius: 4px; padding: 3px 12px; }"
+        " border-radius: 4px; padding: 3px 12px; icon-size: 0px; }"
         f"QPushButton:hover {{ background: {c['raised']}; color: {c['fg1']}; }}"
     )

@@ -192,6 +192,7 @@ class ConfigTest(unittest.TestCase):
         qss = config.stats_dialog_qss(dict(config.COLORS, bg="#000000", line="#222222"))
         self.assertIn("QDialog { background: #000000;", qss)
         self.assertIn("border: 1px solid #222222;", qss)
+        self.assertIn("icon-size: 0px;", qss)
 
     def test_not_a_dict(self):
         self.assertEqual(config.load(None), config.Config())
