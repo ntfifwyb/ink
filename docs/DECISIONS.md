@@ -84,3 +84,6 @@ The user renamed the add-on Ink, and the repo `montinaops/ink`, chosen from name
 
 ## 2026-10-20: Moved to the personal account
 The user moved the repo from the `montinaops` organization to their personal account, as `ntfifwyb/ink`, with the local folder at `~/projects/ntfifwyb/ink`. GitHub's transfer kept the releases, issues and PRs, and it redirects the old URLs, so v0.8.0's manifest homepage still resolves. The add-on itself is unchanged, so no release.
+
+## 2026-10-20: Days follow the local rollover across clock changes
+The user asked to fix the daylight-saving edge found in the audit. Each review's day is now the local date of its time less the rollover hours (Anki's own day boundaries), worked out by SQLite's `localtime`, instead of 24-hour steps back from today's cutoff. A day around a clock change is 23 or 25 hours long. Costs about 5 ms more per deck-list draw on the user's 14.5k reviews; on that history no day changed.
