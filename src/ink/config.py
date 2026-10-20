@@ -61,6 +61,12 @@ GRAPHS = (
 _COLOR = re.compile(r"^[#a-zA-Z0-9(),.%\s]{1,40}$")
 
 
+def _names(values: list, allowed: tuple[str, ...]) -> list[str]:
+    """The allowed names in `values`, in order and without repeats; anything else,
+    such as a nested list, is dropped."""
+    return [v for v in dict.fromkeys(v for v in values if isinstance(v, str)) if v in allowed]
+
+
 @dataclass
 class DeckListConfig:
     columns: list[str] = field(default_factory=lambda: list(DECK_COLUMNS))
@@ -100,14 +106,19 @@ def load(raw: Any) -> Config:
         colors = raw.get(name)
         if isinstance(colors, dict):
             for key, value in colors.items():
-                if key in COLORS and isinstance(value, str) and _COLOR.match(value):
+                if (
+                    key in COLORS
+                    and isinstance(value, str)
+                    and value.strip()
+                    and _COLOR.match(value)
+                ):
                     getattr(cfg, name)[key] = value.strip()
 
     deck = raw.get("deck_list")
     if isinstance(deck, dict):
         cols = deck.get("columns")
         if isinstance(cols, list):
-            cfg.deck_list.columns = [c for c in dict.fromkeys(cols) if c in DECK_COLUMNS]
+            cfg.deck_list.columns = _names(cols, DECK_COLUMNS)
         for key in ("hide_empty_columns", "today_strip", "heatmap"):
             if isinstance(deck.get(key), bool):
                 setattr(cfg.deck_list, key, deck[key])
@@ -122,7 +133,7 @@ def load(raw: Any) -> Config:
     if isinstance(st, dict):
         hidden = st.get("hidden_graphs")
         if isinstance(hidden, list):
-            cfg.stats.hidden_graphs = [g for g in dict.fromkeys(hidden) if g in GRAPHS]
+            cfg.stats.hidden_graphs = _names(hidden, GRAPHS)
         for key in ("summary", "study_time"):
             if isinstance(st.get(key), bool):
                 setattr(cfg.stats, key, st[key])

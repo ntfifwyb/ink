@@ -4,6 +4,10 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Fixed
+- Stats window: Save PDF prints its header (the deck or search, the range and the date) when `stats.summary` is off, with or without `stats.study_time`. It was left out of the page.
+- Config: a color left blank, or a list with something other than names in it (such as `[["due"]]` in `deck_list.columns`), now falls back to the default instead of drawing without that color or breaking the deck list.
+
 ## [0.8.1] - 2026-10-20
 
 ### Fixed

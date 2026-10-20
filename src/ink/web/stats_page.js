@@ -31,7 +31,8 @@
 
   function place(grid) {
     const head = own("ad-scope", function () { return document.createElement("div"); });
-    if (head.nextElementSibling !== grid && head.nextElementSibling !== document.getElementById("ad-sum")) {
+    const next = head.nextElementSibling;
+    if (!next || (next !== grid && next.id !== "ad-sum")) {
       grid.parentNode.insertBefore(head, grid);
     }
     // compared with the HTML last set, as innerHTML reads back re-serialized (&middot; as ·)
@@ -75,7 +76,8 @@
     }
     place(grid);
     const now = pageScope();
-    if (now === null || now === scope || waiting || !(cfg.summary || cfg.studyTime)) return;
+    // asked for even with both sections off: the printed page's header comes with them
+    if (now === null || now === scope || waiting) return;
     waiting = true;
     pycmd("ad-stats:" + now, function (result) {
       waiting = false;

@@ -185,6 +185,19 @@ class ConfigTest(unittest.TestCase):
             config.ReviewerConfig(progress_bar=False, session_stats=True, edit_more=True),
         )
 
+    def test_blank_colors_and_odd_list_items_fall_back(self):
+        cfg = config.load(
+            {
+                "colors": {"bg": "   ", "fg1": " #fff "},
+                "deck_list": {"columns": [["due"], {"new": 1}, 3, "due"]},
+                "stats": {"hidden_graphs": [["hours"], "added"]},
+            }
+        )
+        self.assertEqual(cfg.colors["bg"], config.COLORS["bg"])
+        self.assertEqual(cfg.colors["fg1"], "#fff")
+        self.assertEqual(cfg.deck_list.columns, ["due"])
+        self.assertEqual(cfg.stats.hidden_graphs, ["added"])
+
     def test_stats_settings(self):
         cfg = config.load(
             {"stats": {"hidden_graphs": ["hours", "nope", "hours", "added"], "summary": "no"}}
