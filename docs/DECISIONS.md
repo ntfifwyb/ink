@@ -96,3 +96,6 @@ For v1 the user chose to support only what's tested, over keeping 23.10 and test
 
 ## 2026-10-20: Good looks like the other answer buttons
 The user preferred Good without its highlight (an `accent3` border and `accent` interval, which read as a focus outline): all four answer buttons now look the same. Space still answers Good through Anki's own shortcut, which never depended on the styling.
+
+## 2026-10-20: Full screen menu bar only at the top
+The user asked that hovering the answer buttons in full screen stop showing the menu bar, while the top edge keeps showing it for anyone who doesn't know the shortcut. Anki shows it whenever the pointer leaves the main page; Ink wraps `mw.show_menubar` to skip it while the pointer is over the bottom bar. Decided by Claude, pending review: this applies on every screen's bottom bar, not only the reviewer's, so the rule is simply "the top edge". The top toolbar's own auto-hide (Anki's hide-toolbar setting) is unchanged.
