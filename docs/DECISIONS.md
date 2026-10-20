@@ -99,3 +99,6 @@ The user preferred Good without its highlight (an `accent3` border and `accent` 
 
 ## 2026-10-20: Full screen menu bar only at the top
 The user asked that hovering the answer buttons in full screen stop showing the menu bar, while the top edge keeps showing it for anyone who doesn't know the shortcut. Anki shows it whenever the pointer leaves the main page; Ink wraps `mw.show_menubar` to skip it while the pointer is over the bottom bar. Decided by Claude, pending review: this applies on every screen's bottom bar, not only the reviewer's, so the rule is simply "the top edge". The top toolbar's own auto-hide (Anki's hide-toolbar setting) is unchanged.
+
+## 2026-10-20: Full screen keeps the menu bar
+Replaces "Full screen menu bar only at the top" above. The user asked that the menu bar always be visible, even in full screen. Ink makes `mw.hide_menubar` do nothing; Anki calls it only for full screen, so outside full screen nothing changes. The top toolbar (Decks, Add, Browse) still follows Anki's own hide-toolbar setting.

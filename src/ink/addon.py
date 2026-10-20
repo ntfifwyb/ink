@@ -9,7 +9,6 @@ from pathlib import Path
 from aqt import gui_hooks, mw
 from aqt.deckbrowser import DeckBrowser, DeckBrowserBottomBar, DeckBrowserContent
 from aqt.overview import Overview, OverviewBottomBar, OverviewContent
-from aqt.qt import QCursor
 from aqt.reviewer import Reviewer, ReviewerBottomBar
 from aqt.stats import NewDeckStats
 from aqt.theme import theme_manager
@@ -83,23 +82,10 @@ def style_menu_bar() -> None:
     mw.form.menubar.setStyleSheet(config.menu_bar_qss(_palette()))
 
 
-@guarded(False)
-def pointer_over_bottom_bar() -> bool:
-    bottom = mw.bottomWeb
-    return bottom.isVisible() and bottom.rect().contains(bottom.mapFromGlobal(QCursor.pos()))
-
-
-def keep_menu_bar_to_top_edge() -> None:
-    """In full screen, Anki shows the menu bar whenever the pointer leaves the main
-    page, also downward into the bottom bar with the answer buttons. Ink skips that
-    case, so only the top edge brings the menu bar back."""
-    show = mw.show_menubar
-
-    def show_unless_bottom() -> None:
-        if not (mw.fullscreen and pointer_over_bottom_bar()):
-            show()
-
-    mw.show_menubar = show_unless_bottom
+def keep_menu_bar_in_full_screen() -> None:
+    """Anki hides the menu bar in full screen and shows it again only while the
+    pointer is outside the main page. Ink keeps it visible the whole time."""
+    mw.hide_menubar = lambda: None
 
 
 @guarded()
@@ -226,7 +212,7 @@ def on_config_updated(_raw: dict) -> None:
 def init() -> None:
     mw.addonManager.setWebExports(__name__, r"web/.*\.(css|js)")
     mw.addonManager.setConfigUpdatedAction(__name__, on_config_updated)
-    keep_menu_bar_to_top_edge()
+    keep_menu_bar_in_full_screen()
     gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
     gui_hooks.deck_browser_will_render_content.append(on_deck_browser_will_render_content)
     gui_hooks.overview_will_render_content.append(on_overview_will_render_content)
