@@ -2,10 +2,10 @@
 """Zip src/ink into dist/ink.ankiaddon.
 
 Anki expects the add-on's files at the root of the archive, without the package
-folder or bytecode. meta.json is left out: Anki writes the user's settings there when
-the package folder is used as an installed add-on during development. Entries are
-sorted and timestamped at a fixed date so the same sources always produce the same
-archive.
+folder or bytecode. meta.json and user_files (Ink's error log) are left out: Anki
+and Ink write them when the package folder is used as an installed add-on during
+development. Entries are sorted and timestamped at a fixed date so the same sources
+always produce the same archive.
 """
 
 import sys
@@ -26,6 +26,7 @@ def files() -> list[Path]:
         and "__pycache__" not in p.parts
         and p.suffix != ".pyc"
         and p.relative_to(SRC).as_posix() != "meta.json"
+        and p.relative_to(SRC).parts[0] != "user_files"
     )
 
 

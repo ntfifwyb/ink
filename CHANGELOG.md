@@ -4,6 +4,9 @@ All notable changes to this add-on are listed here. The format follows [Keep a C
 
 ## [Unreleased]
 
+### Added
+- If Ink hits an error while drawing a screen, that screen is left as Anki draws it and Anki stays usable, instead of showing Anki's error dialog, which also switched that part of Ink off until restart. A note says so once per session, and the details go to `user_files/errors.log` in Ink's folder (Tools > Add-ons > Ink > View Files) for a bug report.
+
 ### Fixed
 - Days now start at Anki's rollover hour in local time all year. Before, they were counted in fixed 24-hour steps back from today, so after a daylight-saving change, reviews made in the hour around the rollover could land on the neighbouring day in the heatmap, streaks, this week's time and the stats page.
 - Stats window: Save PDF prints its header (the deck or search, the range and the date) when `stats.summary` is off, with or without `stats.study_time`. It was left out of the page.

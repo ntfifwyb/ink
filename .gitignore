@@ -6,3 +6,4 @@ dist/
 .env
 src/ink/meta.json
 node_modules/
+src/ink/user_files/
