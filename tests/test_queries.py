@@ -52,8 +52,9 @@ class CollectionTest(unittest.TestCase):
         self.col.db.execute(f"update cards set {cols} where id = ?", *values.values(), cid)
 
     def add_revlog(self, days_ago, ease=3, ms=8000, type_=1, cid=1):
-        # an hour before the end of the Anki day `days_ago` days back
-        stamp = (self.clock.cutoff - days_ago * DAY - 3600) * 1000
+        # an hour before the end of the Anki day `days_ago` days back (its end is the
+        # next day's start: counting fixed 24 h days lands an hour off past a DST change)
+        stamp = self.clock.day_start_ms(days_ago - 1) - 3600 * 1000
         while self.col.db.scalar("select 1 from revlog where id = ?", stamp):
             stamp += 1
         self.col.db.execute(
